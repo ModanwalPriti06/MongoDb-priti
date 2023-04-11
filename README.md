@@ -21,4 +21,4 @@
 <li>MongoDB is known for its high performance and ease of use, making it a popular choice for developers looking for a flexible and scalable database solution.</li>
 </ol>
 
-[embed] https://github.com/Rahul12Arora/MongoDb/blob/main/Dark.pdf [/embed]
+[embed] MongoDb/blob/main/Dark.pdf [/embed]
