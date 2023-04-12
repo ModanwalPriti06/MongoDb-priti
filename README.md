@@ -28,3 +28,8 @@
 ![Dark_pages-to-jpg-0004](https://user-images.githubusercontent.com/108695777/231220599-ac2920e6-bc6b-4603-93b7-9fd87280c79a.jpg)
 
 databse=> many collections together in one db => One collection(eg-users) is an Array of documents(record) => one document is collection of fields => one field is eg;- name:"user1"
+
+
+#MONGOOSE
+
+**It is a wrapper around MongoDb, all the commands of MongoDb are available in Mongoose**
