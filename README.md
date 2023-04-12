@@ -33,3 +33,15 @@ databse=> many collections together in one db => One collection(eg-users) is an 
 #MONGOOSE
 
 **It is a wrapper around MongoDb, all the commands of MongoDb are available in Mongoose**
+
+```
+Terminal
+npm init -y
+npm i mongoose
+npm install --save-dev nodemon
+------------------------------------------------------------------------
+
+<ol>
+<li>A Schema is a blueprint(like class) for your database to your data. Schema definition: Mongoose provides a simple and intuitive way to define the structure of your data using a schema. You can define the data types, properties, and validations for each field in your schema.</li>
+<li>A model is a schema in actual form that you can use & have stored in database(like an object from a class blueprint)</li>
+</ol>
