@@ -33,3 +33,10 @@ databse=> many collections together in one db => One collection(eg-users) is an 
 #MONGOOSE
 
 **It is a wrapper around MongoDb, all the commands of MongoDb are available in Mongoose**
+
+```
+Terminal
+npm init -y
+npm i mongoose
+npm install --save-dev nodemon
+------------------------------------------------------------------------
