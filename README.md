@@ -79,6 +79,10 @@ this.updatedAt = Date.now()
 next();
 })
 
+userSchema.post('save', function(doc,next){         //post means happens after you update in db
+doc.sayHi()
+next();
+})
 // we only use normal functions here
 module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
 ```
