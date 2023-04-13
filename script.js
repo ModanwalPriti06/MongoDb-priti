@@ -1,14 +1,25 @@
 const mongoose = require("mongoose"); //importing mongoose module
-mongoose.connect("mongodb://localhost/testdb"); //database link(local or online url)
+mongoose.connect("mongodb://0.0.0.0/newdb"); //database link(local or online url)
 
 const UserModel = require("./User"); //importing model
-
+run()
 async function run() {
-  const user = new UserModel({
+  try{
+  const user = await new UserModel({                        //Method 1 => create instance of model
     name: "john",
     age: 22,
   });
-  await user.save();
-  console.log(user);
+  // const user2 = await UserModel.create({                    //Method 2 => create instance of model
+  //   name: "kyle",
+  //   age: 23,
+  // })
+
+  // await user2.save()
+  const res = await user.save()
+  console.log(res)
+  await console.log("this should be my last output"+user);
 }
-run()
+catch(e){
+  console.log(e)
+}
+}
