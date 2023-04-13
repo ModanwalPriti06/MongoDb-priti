@@ -82,6 +82,9 @@ async function run() {
   await user2.save()                                        //Saving updates the values in db
   await user.save()
   await console.log("this should be my last output"+user2);
+  
+  //You can also update by using findById&Update() method but that will skip validation, validation only works for .save() method
+  //So you should do User.findById().save()
 }
 catch(e){
   console.log(e.message)                                    // e.message gives just the message
@@ -107,7 +110,12 @@ city: String,
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },                //required validation
   email: { type: String, required: true, unique: true }, //unique validation
-  age: { type: Number, min: 18, max: 120 },              //min max validation
+  age: { type: Number, min: 18, max: 120,                
+        validate: {
+        validator: v=> v%2===0,
+        message: props => `${props.value} is not an even number`
+        }
+  },                                                     //min max validation + custom validator
   isAdmin: { type: Boolean, default: false },            //default is taken as false
   bestFriend: mongoose.SchemaTypes.ObjectId,            //We can reference another document in here
   hobbies: [String],                                    //If empty it can be anything
