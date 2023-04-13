@@ -74,6 +74,11 @@ return this.where({ name: new RegExp(name,'i'})
 
 userSchema.virtual("namedEmail").get(function(){return `${this.name} <${this.email}>`})}
 
+userSchema.pre('save', function(next){         //pre means before you update in db, post means after
+this.updatedAt = Date.now()
+next();
+})
+
 // we only use normal functions here
 module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
 ```
