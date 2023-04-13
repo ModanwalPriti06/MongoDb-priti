@@ -57,6 +57,24 @@ const userSchema = new mongoose.Schema({
     age: Number
 })
 
+userSchema.methods.sayHi = function(){
+    console.log(`say hi to ${this.name}`);
+}
+//now we can use this in index.js, Eg- user1.sayHi()
+
+userSchema.statics.findByName = function(name) {
+return this.where({ name: new RegExp(name, 'i'})
+}
+//now we can use this on collection, not just document, Eg- UserModel.findByName("kyle")
+
+userSchema.query.byName = function (name) {
+return this.where({ name: new RegExp(name,'i'})
+}
+//now we can use this on query functions, Eg- UserModel.find().byName("kyle")
+
+userSchema.virtual("namedEmail").get(function(){return `${this.name} <${this.email}>`})}
+
+// we only use normal functions here
 module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
 ```
 
@@ -85,6 +103,9 @@ async function run() {
   
   //You can also update by using findById&Update() method but that will skip validation, validation only works for .save() method
   //So you should do User.findById().save()
+  const users = await User.find({name: "kyle"})
+  const users = await User.where("name").equals("kyle")
+  const users = await User.where("age").gt("12").where("name").equals("kyle").select("address")
 }
 catch(e){
   console.log(e.message)                                    // e.message gives just the message
