@@ -9,17 +9,17 @@ async function run() {
     name: "john",
     age: 22,
   });
-  // const user2 = await UserModel.create({                    //Method 2 => create instance of model
-  //   name: "kyle",
-  //   age: 23,
-  // })
+  const user2 = await UserModel.create({                    //Method 2 => create instance of model
+    name: "kyle",
+    age: 23,
+  })
 
-  // await user2.save()
-  const res = await user.save()
-  console.log(res)
-  await console.log("this should be my last output"+user);
+  await user2.save()
+  await user.save()
+  await console.log("this should be my last output"+user2);
 }
 catch(e){
-  console.log(e)
+  console.log(e.message)                                    // e.message gives just the message
 }
+
 }
