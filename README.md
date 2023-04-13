@@ -40,8 +40,121 @@ npm init -y
 npm i mongoose
 npm install --save-dev nodemon
 ------------------------------------------------------------------------
+```
 
 <ol>
 <li>A Schema is a blueprint(like class) for your database to your data. Schema definition: Mongoose provides a simple and intuitive way to define the structure of your data using a schema. You can define the data types, properties, and validations for each field in your schema.</li>
 <li>A model is a schema in actual form that you can use & have stored in database(like an object from a class blueprint)</li>
 </ol>
+
+<h3>Basic Schema/User Model</h3>
+
+```
+const mongoose = require('mongoose')
+
+const userSchema = new mongoose.Schema({
+    name: String,
+    age: Number
+})
+
+module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
+```
+
+<h3>Using in Index.js file</h3>
+
+```
+const mongoose = require("mongoose"); //importing mongoose module
+mongoose.connect("mongodb://0.0.0.0/newdb"); //database link(local or online url)
+
+const UserModel = require("./User"); //importing model
+run()
+async function run() {
+  try{
+  const user = await new UserModel({                        //Method 1 => create instance of model
+    name: "john",
+    age: 22,
+  });
+  const user2 = await UserModel.create({                    //Method 2 => create instance of model
+    name: "kyle",
+    age: 23,
+  })
+
+  await user2.save()                                        //Saving updates the values in db
+  await user.save()
+  await console.log("this should be my last output"+user2);
+  
+  //You can also update by using findById&Update() method but that will skip validation, validation only works for .save() method
+  //So you should do User.findById().save()
+}
+catch(e){
+  console.log(e.message)                                    // e.message gives just the message
+}
+
+}
+
+
+```
+
+<h3>More on Schema</h3>
+
+```
+const mongoose = require('mongoose');
+
+const addressSchema = new mongoose.Schema({
+street: String,
+city: String,
+})
+
+//If a validation is not met we get error while using this schema
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },                //required validation
+  email: { type: String, required: true, unique: true }, //unique validation
+  age: { type: Number, min: 18, max: 120,                
+        validate: {
+        validator: v=> v%2===0,
+        message: props => `${props.value} is not an even number`
+        }
+  },                                                     //min max validation + custom validator
+  isAdmin: { type: Boolean, default: false },            //default is taken as false
+  bestFriend: mongoose.SchemaTypes.ObjectId,            //We can reference another document in here
+  hobbies: [String],                                    //If empty it can be anything
+  address: {
+    Street: String,
+    City: String,
+  },
+  address2: addressSchema,                              //Link to another schema
+  email2: {type String, lowercase:true},                //string will be converted into lowercase before being saved
+  createdAt: {
+  immutable:true,                                       //It cannot be changed once set
+  default:()=> Date.now(),                              //When a document is created, current date is taken by default
+});
+
+const User = mongoose.model('User', userSchema);
+```
+
+
+<h3><Creating a document</h3>
+    
+```
+//in index.js
+const user = new User({
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+  age: 25,
+  isAdmin: true
+});
+
+user.save()
+  .then(() => console.log('User created!'))
+  .catch(err => console.error('Error creating user:', err));
+
+```
+
+<h3>Retrieving documents</h3>
+    
+```
+User.find({ age: { $gte: 18 } })
+  .then(users => console.log(users))
+  .catch(err => console.error('Error retrieving users:', err));
+```
