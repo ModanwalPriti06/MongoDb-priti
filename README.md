@@ -40,8 +40,88 @@ npm init -y
 npm i mongoose
 npm install --save-dev nodemon
 ------------------------------------------------------------------------
-
+```
 <ol>
 <li>A Schema is a blueprint(like class) for your database to your data. Schema definition: Mongoose provides a simple and intuitive way to define the structure of your data using a schema. You can define the data types, properties, and validations for each field in your schema.</li>
 <li>A model is a schema in actual form that you can use & have stored in database(like an object from a class blueprint)</li>
 </ol>
+
+<h3>Basic Schema/User Model</h3>
+```
+const mongoose = require('mongoose')
+
+const userSchema = new mongoose.Schema({
+    name: String,
+    age: Number
+})
+
+module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
+```
+
+<h3>Index.js file</h3>
+
+```
+const mongoose = require("mongoose"); //importing mongoose module
+mongoose.connect("mongodb://0.0.0.0/newdb"); //database link(local or online url)
+
+const UserModel = require("./User"); //importing model
+run()
+async function run() {
+  try{
+  const user = await new UserModel({                        //Method 1 => create instance of model
+    name: "john",
+    age: 22,
+  });
+  const user2 = await UserModel.create({                    //Method 2 => create instance of model
+    name: "kyle",
+    age: 23,
+  })
+
+  await user2.save()
+  await user.save()
+  await console.log("this should be my last output"+user2);
+}
+catch(e){
+  console.log(e)
+}
+}
+
+```
+
+<h3>More on Schema</h3>
+
+```
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  age: { type: Number, min: 18, max: 120 },
+  isAdmin: { type: Boolean, default: false }
+});
+
+const User = mongoose.model('User', userSchema);
+```
+
+<h3><Creating a document</h3>
+```
+//in index.js
+const user = new User({
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+  age: 25,
+  isAdmin: true
+});
+
+user.save()
+  .then(() => console.log('User created!'))
+  .catch(err => console.error('Error creating user:', err));
+
+```
+
+<h3>Retrieving documents</h3>
+```
+User.find({ age: { $gte: 18 } })
+  .then(users => console.log(users))
+  .catch(err => console.error('Error retrieving users:', err));
+```
