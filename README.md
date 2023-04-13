@@ -41,12 +41,14 @@ npm i mongoose
 npm install --save-dev nodemon
 ------------------------------------------------------------------------
 ```
+
 <ol>
 <li>A Schema is a blueprint(like class) for your database to your data. Schema definition: Mongoose provides a simple and intuitive way to define the structure of your data using a schema. You can define the data types, properties, and validations for each field in your schema.</li>
 <li>A model is a schema in actual form that you can use & have stored in database(like an object from a class blueprint)</li>
 </ol>
 
 <h3>Basic Schema/User Model</h3>
+
 ```
 const mongoose = require('mongoose')
 
@@ -58,7 +60,7 @@ const userSchema = new mongoose.Schema({
 module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
 ```
 
-<h3>Index.js file</h3>
+<h3>Using in Index.js file</h3>
 
 ```
 const mongoose = require("mongoose"); //importing mongoose module
@@ -77,14 +79,16 @@ async function run() {
     age: 23,
   })
 
-  await user2.save()
+  await user2.save()                                        //Saving updates the values in db
   await user.save()
   await console.log("this should be my last output"+user2);
 }
 catch(e){
-  console.log(e)
+  console.log(e.message)                                    // e.message gives just the message
 }
+
 }
+
 
 ```
 
@@ -93,17 +97,37 @@ catch(e){
 ```
 const mongoose = require('mongoose');
 
+const addressSchema = new mongoose.Schema({
+street: String,
+city: String,
+})
+
+//If a validation is not met we get error while using this schema
+
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  age: { type: Number, min: 18, max: 120 },
-  isAdmin: { type: Boolean, default: false }
+  name: { type: String, required: true },                //required validation
+  email: { type: String, required: true, unique: true }, //unique validation
+  age: { type: Number, min: 18, max: 120 },              //min max validation
+  isAdmin: { type: Boolean, default: false },            //default is taken as false
+  bestFriend: mongoose.SchemaTypes.ObjectId,            //We can reference another document in here
+  hobbies: [String],                                    //If empty it can be anything
+  address: {
+    Street: String,
+    City: String,
+  },
+  address2: addressSchema,                              //Link to another schema
+  email2: {type String, lowercase:true},                //string will be converted into lowercase before being saved
+  createdAt: {
+  immutable:true,                                       //It cannot be changed once set
+  default:()=> Date.now(),                              //When a document is created, current date is taken by default
 });
 
 const User = mongoose.model('User', userSchema);
 ```
 
+
 <h3><Creating a document</h3>
+    
 ```
 //in index.js
 const user = new User({
@@ -120,6 +144,7 @@ user.save()
 ```
 
 <h3>Retrieving documents</h3>
+    
 ```
 User.find({ age: { $gte: 18 } })
   .then(users => console.log(users))
