@@ -165,7 +165,7 @@ const User = mongoose.model('User', userSchema);
 
 
 <h3><Creating a document</h3>
-    
+
 ```
 //in index.js
 const user = new User({
@@ -187,4 +187,38 @@ user.save()
 User.find({ age: { $gte: 18 } })
   .then(users => console.log(users))
   .catch(err => console.error('Error retrieving users:', err));
+```
+
+<h3>Real world example</h3>
+
+```
+const mongoose = require("mongoose")
+
+const {Schema}=mongoose
+
+const UserSchema = new Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    location :{
+        type: String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    password :{
+        type: String,
+        required:true
+    },
+    date:{
+        type:Date,
+        default:Date.now
+    }
+
+},{versionKey:false})
+
+module.exports=mongoose.model("users",UserSchema)
 ```
