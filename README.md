@@ -87,6 +87,8 @@ next();
 module.exports = mongoose.model("userInCollection", userSchema)  // A collection with the name "userInCollection" will be added to the database we use it in.
 ```
 
+**url m db, schema creation m collection name, then use schema as class for documents**
+
 <h3>Using in Index.js file</h3>
 
 ```
