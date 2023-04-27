@@ -40,6 +40,7 @@
     <li>Model.replaceOne()</li>
 </ul>
 
+<h2> Heirarchy in mongo </h2>
 databse=> many collections together in one db => One collection(eg-users) is an Array of documents(record) => one document is collection of fields => one field is eg;- name:"user1"
 
 
