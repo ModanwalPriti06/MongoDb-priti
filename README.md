@@ -51,7 +51,7 @@ npm install --save-dev nodemon
 
 [Mongo](https://mongoosejs.com/docs/guide.html)
 
-[Read more](https://www.codingninjas.com/codestudio/library/mongoose-schema-and-models)
+[Schema and Models](https://www.codingninjas.com/codestudio/library/mongoose-schema-and-models)
 
 ```
 const mongoose = require('mongoose')
