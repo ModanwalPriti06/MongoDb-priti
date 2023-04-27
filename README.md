@@ -40,6 +40,37 @@
     <li>Model.replaceOne()</li>
 </ul>
 
+<h2>2 ways to execute a Queries</h2>
+
+**mongoose query can be executed in one of two ways. First, if you pass in a callback function, Mongoose will execute the query asynchronously and pass the results to the callback.
+
+**A query also has a .then() function, and thus can be used as a promise.
+
+```
+//With callback
+
+Person.findOne({ 'name.last': 'Ghost' }, 'name occupation', function(err, person) {
+  if (err) return handleError(err);
+  // Prints "Space Ghost is a talk show host".
+  console.log(person.name.first, person.name.last,person.occupation);
+});
+--------------------------------------------------------------------------------------
+//Without callback
+
+const query = Person.findOne({ 'name.last': 'Ghost' });
+
+// selecting the `name` and `occupation` fields
+query.select('name occupation');
+
+// execute the query at a later time
+query.exec(function(err, person) {
+  if (err) return handleError(err);
+  // Prints "Space Ghost is a talk show host."
+  console.log('%s %s is a %s.', person.name.first, person.name.last,
+    person.occupation);
+});
+```
+
 <h2> Heirarchy in mongo </h2>
 databse=> many collections together in one db => One collection(eg-users) is an Array of documents(record) => one document is collection of fields => one field is eg;- name:"user1"
 
