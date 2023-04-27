@@ -289,6 +289,7 @@ Person.findPersonById = function (id) {
 
 </ul>
     
+Example Schema with reference to another schema
     
 ```
     const userSchema = new mongoose.Schema({
@@ -312,3 +313,17 @@ module.exports = {
 }
 ```
 
+Using with and without populate method
+    
+```
+    // Query to find and show all the posts
+Post.find()
+    .then(p => console.log(p))
+    .catch(error => console.log(error));
+-------------------------------------------------------------------
+    
+Post.find()
+.populate("postedBy")
+.then(p=>console.log(p))
+.catch(error=>console.log(error));
+```
