@@ -27,12 +27,30 @@
 ![Dark_pages-to-jpg-0003](https://user-images.githubusercontent.com/108695777/231220557-02bc337d-4b86-42df-ade2-e55b79ac5ac1.jpg)
 ![Dark_pages-to-jpg-0004](https://user-images.githubusercontent.com/108695777/231220599-ac2920e6-bc6b-4603-93b7-9fd87280c79a.jpg)
 
+<ul>
+    <li>Model.deleteMany()</li>
+    <li>Model.deleteOne()</li>
+    <li>Model.find()</li>
+    <li>Model.findById()</li>
+    <li>Model.findByIdAndDelete()</li>
+    <li>Model.findByIdAndRemove()</li>
+    <li>Model.findByIdAndUpdate()</li>
+    <li>Model.findOne()</li>
+    <li>Model.findOneAndDelete()</li>
+    <li>Model.findOneAndRemove()</li>
+    <li>Model.findOneAndReplace()</li>
+    <li>Model.findOneAndUpdate()</li>
+    <li>Model.replaceOne()</li>
+    <li>Model.updateMany()</li>
+    <li>Model.updateOne()</li>
+</ul>
+
 databse=> many collections together in one db => One collection(eg-users) is an Array of documents(record) => one document is collection of fields => one field is eg;- name:"user1"
 
 
 #MONGOOSE
 
-**It is a wrapper around MongoDb, all the commands of MongoDb are available in Mongoose**
+**It is a wrapper shell around MongoDb terminal, all the commands of MongoDb are available in Mongoose**
 
 ```
 Terminal
