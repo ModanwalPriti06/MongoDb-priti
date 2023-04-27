@@ -288,3 +288,27 @@ Person.findPersonById = function (id) {
 <li>Example: In the following example, we have one userSchema and another postSchema, in the postSchema we have one field postedBy which references a document from the User model.</li>
 
 </ul>
+    
+    
+```
+    const userSchema = new mongoose.Schema({
+    username: String,
+    email: String
+})
+
+const postSchema = new mongoose.Schema({
+    title: String,
+    postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
+})
+
+const User = mongoose.model('User', userSchema);
+const Post = mongoose.model('Post', postSchema);
+
+module.exports = {
+    Source, Destination, User, Post
+}
+```
+
