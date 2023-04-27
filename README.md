@@ -48,6 +48,7 @@ npm install --save-dev nodemon
 </ol>
 
 <h3>Basic Schema/User Model</h3>
+
 [Mongo](https://mongoosejs.com/docs/guide.html)
 
 [Read more](https://www.codingninjas.com/codestudio/library/mongoose-schema-and-models)
