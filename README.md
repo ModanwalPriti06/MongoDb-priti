@@ -331,15 +331,15 @@ Post.find()
 How to poluate multiple entities
 
 ```
-array syntax:     let results = await OrderModel.find().populate(['user', 'meal']);
+array syntax:               let results = await OrderModel.find().populate(['user', 'meal']);
 
-Chaining Method:  OrderModel.find().populate('user').populate('meal')
-    .exec(function (err, results) {
-         // callback
-    });
+Chaining Method:            OrderModel.find().populate('user').populate('meal')
+                            .exec(function (err, results) {
+                                // callback
+                            });
 
-Simple method:  OrderModel.find().populate('user meal')
-    .exec(function (err, results) {
-         // callback
-    });
+Simple method:              OrderModel.find().populate('user meal')
+                            .exec(function (err, results) {
+                                 // callback
+                            });
 ```
