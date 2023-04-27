@@ -48,6 +48,7 @@ npm install --save-dev nodemon
 </ol>
 
 <h3>Basic Schema/User Model</h3>
+[Mongo](https://mongoosejs.com/docs/guide.html)
 
 [Read more](https://www.codingninjas.com/codestudio/library/mongoose-schema-and-models)
 
@@ -226,4 +227,23 @@ const UserSchema = new Schema({
 },{versionKey:false})
 
 module.exports=mongoose.model("users",UserSchema)
+```
+
+<h2>Adding custom functions to schema model</h2>
+
+```
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URL);
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  favoriteFoods: [String]
+});
+
+const Person = mongoose.model('Person', personSchema);
+
+const createAndSavePerson = function(done) {
+    
+};
 ```
