@@ -49,6 +49,8 @@ npm install --save-dev nodemon
 
 <h3>Basic Schema/User Model</h3>
 
+<a href="https://www.codingninjas.com/codestudio/library/mongoose-schema-and-models>Read more</a>
+
 ```
 const mongoose = require('mongoose')
 
