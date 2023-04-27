@@ -230,21 +230,33 @@ const UserSchema = new Schema({
 module.exports=mongoose.model("users",UserSchema)
 ```
 
-<h2>Adding custom functions to schema model</h2>
+<h2>Adding custom functions to schema model + .select()</h2>
 
 ```
-const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URL);
+const Person = module.exports = mongoose.model('Person', PersonSchema);
 
-const personSchema = new mongoose.Schema({
-  name: String,
-  age: Number,
-  favoriteFoods: [String]
-});
 
-const Person = mongoose.model('Person', personSchema);
+Person.findByEmailAndMobile = function (email, contact_no, Person_no) {
+    return Person.findOne({ email })
+        .then((user) => {
+            if (user) return Promise.reject('Email already exists.');
+            return Person.findOne({ contact_no })
+        })
+        .then((user) => {
+            if (user) return Promise.reject('Contact no already exists.');
+            return Person.findOne({ customer_no })
+        })
+        .then((user) => {
+            if (user) return Promise.reject('Person no already exists.');
+        });
+}
 
-const createAndSavePerson = function(done) {
-    
-};
+Person.findPersonById = function (id) {
+    return Person.findById(id)
+        .select('name email contact_no address person_no')   //select() returns the specific fields we require
+        .then((person) => {
+            if (person) return person;
+            reject('Person not found.');
+        });
+}
 ```
