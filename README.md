@@ -245,6 +245,7 @@ module.exports=mongoose.model("users",UserSchema)
 ```
 
 <h2>Adding custom functions to schema model + .select()</h2>
+    
 
 ```
 const Person = module.exports = mongoose.model('Person', PersonSchema);
@@ -276,8 +277,9 @@ Person.findPersonById = function (id) {
     
 ```
 
+```
     
-    ```
+```
     const userSchema = new mongoose.Schema({
     username: String,
     email: String
