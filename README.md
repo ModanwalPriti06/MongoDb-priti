@@ -274,3 +274,34 @@ Person.findPersonById = function (id) {
         });
 }
 ```
+
+    <h2>Populate</h2>
+    <ul>
+    <li>In MongoDB, Population is the process of replacing the specified path in the document of one collection with the actual document from the other collection.</li>
+
+<li>Need of Population: Whenever in the schema of one collection we provide a reference (in any field) to a document from any other collection, we need a populate() method to fill the field with that document.</li>
+
+<li>Example: In the following example, we have one userSchema and another postSchema, in the postSchema we have one field postedBy which references a document from the User model.</li>
+    </ul>
+    
+    ```
+    const userSchema = new mongoose.Schema({
+    username: String,
+    email: String
+})
+
+const postSchema = new mongoose.Schema({
+    title: String,
+    postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
+})
+
+const User = mongoose.model('User', userSchema);
+const Post = mongoose.model('Post', postSchema);
+
+module.exports = {
+    Source, Destination, User, Post
+}
+    ```
