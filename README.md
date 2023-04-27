@@ -273,9 +273,11 @@ Person.findPersonById = function (id) {
             reject('Person not found.');
         });
 }
+    
 ```
 
     <h2>Populate</h2>
+    
     <ul>
     <li>In MongoDB, Population is the process of replacing the specified path in the document of one collection with the actual document from the other collection.</li>
 
@@ -304,4 +306,4 @@ const Post = mongoose.model('Post', postSchema);
 module.exports = {
     Source, Destination, User, Post
 }
-    ```
+```
