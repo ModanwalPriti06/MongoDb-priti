@@ -32,6 +32,13 @@
 ![Dark_pages-to-jpg-0003](https://user-images.githubusercontent.com/108695777/231220557-02bc337d-4b86-42df-ade2-e55b79ac5ac1.jpg)
 ![Dark_pages-to-jpg-0004](https://user-images.githubusercontent.com/108695777/231220599-ac2920e6-bc6b-4603-93b7-9fd87280c79a.jpg)
 
+```
+use newlocal2 //create new db, makes one if not present
+db.createCollection('newcollection')
+db.newcollection.insertOne({name:"user1"})
+```
+
+
 <h2> More commands for mongo </h2>
 <ul>
     <li>Model.findById()</li>
