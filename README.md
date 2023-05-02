@@ -50,7 +50,7 @@ db.newcollection.insertOne({name:"user1"})          //insert a document
 </ul>
 
 <h2> Heirarchy in mongo </h2>
-databse=> many collections together in one db => One collection(eg-users) is an Array of documents(record) => one document is collection of fields => one field is eg;- name:"user1"
+databse => </br> many collections together in one db => </br> One collection(eg-users) is an Array of documents(record) => </br> one document is collection of fields => </br> one field is eg;- name:"user1"
 
 
 #MONGOOSE
