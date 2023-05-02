@@ -385,6 +385,25 @@ Simple method:              OrderModel.find().populate('user meal')
                             });
 ```
     
+<h2>Aggregation pipeline</h2>
+    
+**In MongoDB, the aggregation pipeline is a framework for performing data processing and analysis on collections of documents. It allows you to perform complex data operations on a set of documents and return the results in a structured way.**
+
+**The aggregation pipeline consists of a set of stages that are processed in sequence. Each stage takes in a set of documents as input, performs a specific operation on them, and outputs the result to the next stage. The output of one stage becomes the input to the next stage, and so on, until the final stage produces the final result.**
+
+**Some examples of stages in the aggregation pipeline include:**
+    
+<ul>
+<li>$match: Filters documents in the collection based on specified criteria.</li>
+<li>$group: Groups documents together based on a specified key and calculates aggregate values for each group.</li>
+<li>$sort: Sorts the documents in the collection based on a specified field or set of fields.</li>
+<li>$project: Selects and transforms fields in the documents.</li>
+</ul>
+
+**The aggregation pipeline is a powerful tool for performing complex data analysis and processing in MongoDB. It allows you to combine multiple operations into a single query, which can improve performance and reduce the amount of data transferred between the database and the client.**
+
+    
+    
     
 ![Dark_pages-to-jpg-0001](https://user-images.githubusercontent.com/108695777/231220392-11314396-21f9-47c0-88f3-2602c0954630.jpg)
 ![Dark_pages-to-jpg-0002](https://user-images.githubusercontent.com/108695777/231220470-755aec9b-f81c-4d55-a57c-e417ce0ab685.jpg)
