@@ -32,10 +32,12 @@
 ![Dark_pages-to-jpg-0003](https://user-images.githubusercontent.com/108695777/231220557-02bc337d-4b86-42df-ade2-e55b79ac5ac1.jpg)
 ![Dark_pages-to-jpg-0004](https://user-images.githubusercontent.com/108695777/231220599-ac2920e6-bc6b-4603-93b7-9fd87280c79a.jpg)
 
+#Mongosh getting started
+
 ```
-use newlocal2 //create new db, makes one if not present
-db.createCollection('newcollection')
-db.newcollection.insertOne({name:"user1"})
+use newlocal2                                       //use newlocal2 db, makes one if not present
+db.createCollection('newcollection')                //make a collection
+db.newcollection.insertOne({name:"user1"})          //insert a document
 ```
 
 
@@ -52,7 +54,7 @@ db.newcollection.insertOne({name:"user1"})
     <li>Model.replaceOne()</li>
 </ul>
 
-<h2>2 ways to execute a Queries</h2>
+<h2>2 ways to execute Queries</h2>
 
 **mongoose query can be executed in one of two ways. First, if you pass in a callback function, Mongoose will execute the query asynchronously and pass the results to the callback.
 
