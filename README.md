@@ -53,6 +53,7 @@ db.newcollection.insertOne({name:"user1"})          //insert a document
 databse => </br> many collections together in one db => </br> One collection(eg-users) is an Array of documents(record) => </br> one document is collection of fields => </br> one field is eg;- name:"user1"
 
 
+
 #MONGOOSE
 
 **It is a wrapper shell around MongoDb terminal, all the commands of MongoDb are available in Mongoose**
