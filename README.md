@@ -27,7 +27,7 @@
 <li>Mongosh is an interactive command-line shell and scripting environment for MongoDB that allows users to perform database operations, run queries, and automate tasks using JavaScript.</li>
 </ul>
 
-#Mongosh getting started
+<h2>Mongosh getting started</h2>
 
 ```
 use newlocal2                                       //use newlocal2 db, makes one if not present
