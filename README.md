@@ -481,7 +481,38 @@ This will return a new set of documents, with one document for each item in the 
 
 8. $lookup: Performs a left outer join with another collection.
 
-The $lookup stage allows you to perform a left
+The $lookup stage allows you to perform a left outer join with another collection in the same database. This stage is useful when you want to combine data from multiple collections. Here's an example:
+
+```
+db.orders.aggregate([
+   {
+      $lookup:
+         {
+           from: "customers",
+           localField: "customer_id",
+           foreignField: "_id",
+           as: "customer_details"
+         }
+   }
+])
+```
+
+This will perform a left outer join with the "customers" collection, using the "customer_id" field in the "orders" collection and the "_id" field in the "customers" collection as the keys for the join. The resulting documents will contain an additional "customer_details" field, which will contain an array of matching documents from the "customers" collection.
+
+9. $out: Writes the results of the aggregation pipeline to a collection.
+
+The $out stage allows you to write the results of the aggregation pipeline to a new collection in the same database. Here's an example:
+
+```
+db.orders.aggregate([
+   { $match : { status : "A" } },
+   { $out : "processed_orders" }
+])
+```
+
+This will create a new collection called "processed_orders" and write the results of the aggregation pipeline to that collection.
+
+These are the main stages in the MongoDB aggregation pipeline. By combining these stages in various ways, you can perform complex data processing and analysis on your MongoDB collections.
     
 <ul>
 <li>$match: Filters documents in the collection based on specified criteria.</li>
