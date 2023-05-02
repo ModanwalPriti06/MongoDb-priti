@@ -68,9 +68,9 @@ npm install --save-dev nodemon
 
 <h2>2 ways to execute Queries</h2>
 
-**mongoose query can be executed in one of two ways. First, if you pass in a callback function, Mongoose will execute the query asynchronously and pass the results to the callback.
+**mongoose query can be executed in one of two ways. First, if you pass in a callback function, Mongoose will execute the query asynchronously and pass the results to the callback.**
 
-**A query also has a .then() function, and thus can be used as a promise.
+**A query also has a .then() function, and thus can be used as a promise.**
 
 
 
@@ -78,24 +78,22 @@ npm install --save-dev nodemon
 //With callback
 
 Person.findOne({ 'name.last': 'Ghost' }, 'name occupation', function(err, person) {
-  if (err) return handleError(err);
-  // Prints "Space Ghost is a talk show host".
-  console.log(person.name.first, person.name.last,person.occupation);
+  if (err) return handleError(err);   
+  console.log(person.name.first, person.name.last,person.occupation);           // Prints "Space Ghost is a talk show host".
 });
---------------------------------------------------------------------------------------
+```
+
+
+```
 //Without callback
 
 const query = Person.findOne({ 'name.last': 'Ghost' });
 
-// selecting the `name` and `occupation` fields
-query.select('name occupation');
+query.select('name occupation');                            // selecting the `name` and `occupation` fields
 
-// execute the query at a later time
-query.exec(function(err, person) {
+query.exec(function(err, person) {                          // execute the query at a later time
   if (err) return handleError(err);
-  // Prints "Space Ghost is a talk show host."
-  console.log('%s %s is a %s.', person.name.first, person.name.last,
-    person.occupation);
+  console.log('%s %s is a %s.', person.name.first, person.name.last,person.occupation);  // Prints "Space Ghost is a talk show host."
 });
 ```
 
