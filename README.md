@@ -102,7 +102,7 @@ query.exec(function(err, person) {                          // execute the query
 <li>A model is a schema in actual form that you can use & have stored in database(like an object from a class blueprint)</li>
 </ol>
 
-<h3>Basic Schema/User Model</h3>
+<h3>Basic Schema/User Model (Making in node.js)</h3>
 
 [Mongo](https://mongoosejs.com/docs/guide.html)
 
