@@ -666,7 +666,397 @@ These are the main stages in the MongoDB aggregation pipeline. By combining thes
 
 The aggregation pipeline is a powerful tool for performing complex data analysis and processing in MongoDB. It allows you to combine multiple operations into a single query, which can improve performance and reduce the amount of data transferred between the database and the client.
 
-    
+<h1>Mongoose Commands</h1>
+
+Sure, here are all 30 important Mongoose commands with their descriptions and example usage:
+
+1. `mongoose.connect(uri, [options])`: Connects to a MongoDB database using the specified connection string. Example:
+
+```
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/mydb', { useNewUrlParser: true })
+  .then(() => console.log('Connected to database'))
+  .catch((err) => console.error('Error connecting to database', err));
+```
+
+2. `mongoose.connection`: Represents the current connection to the database. You can use this object to register event listeners and perform other actions. Example:
+
+```
+const connection = mongoose.connection;
+
+connection.on('connected', () => console.log('Connected to database'));
+connection.on('disconnected', () => console.log('Disconnected from database'));
+```
+
+3. `mongoose.Schema(definition, [options])`: Defines a schema for a collection. A schema specifies the structure of the documents and the data types of their fields. Example:
+
+```
+const mongoose = require('mongoose');
+
+const schema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  gender: { type: String, enum: ['Male', 'Female', 'Other'] }
+});
+
+const Model = mongoose.model('Model', schema);
+```
+
+4. `model.save([options], [callback])`: Saves the current document to the database. Example:
+
+```
+const doc = new Model({ name: 'John', age: 25, gender: 'Male' });
+
+doc.save((err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Document saved');
+  }
+});
+```
+
+5. `Model.create(doc(s), [callback])`: Creates one or more documents and saves them to the database. Example:
+
+```
+Model.create([
+  { name: 'John', age: 25, gender: 'Male' },
+  { name: 'Jane', age: 30, gender: 'Female' }
+], (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Documents saved');
+  }
+});
+```
+
+6. `Model.find(conditions, [projection], [options], [callback])`: Finds all documents that match the given conditions and returns them as an array of Mongoose documents. You can specify a projection to select only the fields you want to retrieve. Example:
+
+```
+Model.find({ gender: 'Male' }, 'name age', (err, docs) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(docs);
+  }
+});
+```
+
+7. `Model.find({}).sort(sort).skip(skip).limit(limit).exec(callback)`: Finds all documents in the collection and applies the specified sort, skip, and limit options. The `exec` method executes the query and returns the results as an array of Mongoose documents. Example:
+
+```
+Model.find({}).sort({ name: 'asc' }).skip(10).limit(5).exec((err, docs) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(docs);
+  }
+});
+```
+
+8. `Model.findByIdAndDelete(id, [options], [callback])`: Finds a single document by its `_id` field, deletes it from the database, and returns the deleted document. Example:
+
+```
+Model.findByIdAndDelete('60a7c534aa88b72fb7b8c1e1', (err, doc) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(doc);
+  }
+});
+```
+
+9. `Model.findOneAndDelete(conditions, [options], [callback])`: Finds a single document that matches the given conditions, deletes it from the database, and returns the deleted document. Example:
+
+```
+Model.findOneAndDelete({ name: 'John' }, (err, doc) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(doc);
+  }
+});
+```
+
+10. `Model.findByIdAndUpdate(id, update, [options], [callback])`: Finds a single document by its `_id` field, updates it with the specified fields and values, and returns the updated document. Example:
+
+```
+Model.findByIdAndUpdate('60a7c534aa88b72fb7b8c1e1', { age: 26 }, { new: true }, (err, doc) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(doc);
+  }
+});
+```
+
+11. `Model.findOneAndUpdate(conditions, update, [options], [callback])`: Finds a single document that matches the given conditions, updates it with the specified fields and values, and returns the updated document. Example:
+
+```
+Model.findOneAndUpdate({ name: 'John' }, { age: 26 }, { new: true }, (err, doc) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(doc);
+  }
+});
+```
+
+12. `Model.updateMany(conditions, update, [options], [callback])`: Updates all documents that match the given conditions with the specified fields and values. Example:
+
+```
+Model.updateMany({ isMinor: true }, { isMinor: false }, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Documents updated');
+  }
+});
+```
+
+13. `Model.countDocuments(conditions, [callback])`: Counts the number of documents that match the given conditions. Example:
+
+```
+Model.countDocuments({ gender: 'Male' }, (err, count) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(count);
+  }
+});
+```
+
+14. `Model.distinct(field, [conditions], [callback])`: Finds all unique values for the given field that match the given conditions. Example:
+
+```
+Model.distinct('gender', { age: { $gte: 18 } }, (err, values) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(values);
+  }
+});
+```
+
+15. `Model.exists(conditions, [callback])`: Checks if at least one document exists that matches the given conditions. Example:
+
+```
+Model.exists({ name: 'John' }, (err, exists) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(exists);
+  }
+});
+```
+
+16. `Model.populate(path, [select], [model], [match], [options])`: Populates the specified field with documents from another collection. Example:
+
+```
+const schema1 = new mongoose.Schema({
+  name: String,
+  model2: { type: mongoose.Schema.Types.ObjectId, ref: 'Model2' }
+});
+
+const schema2 = new mongoose.Schema({
+  field: String
+});
+
+const Model1 = mongoose.model('Model1', schema1);
+const Model2 = mongoose.model('Model2', schema2);
+
+Model1.find().populate('model2', 'field').exec((err, docs) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(docs);
+  }
+});
+```
+
+17. `Model.distinct(field, [conditions], [callback])`: Returns an array of distinct values for the given field across all documents in the collection. Example:
+
+```
+Model.distinct('name', (err, distinctValues) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(distinctValues);
+  }
+});
+```
+
+18. `Model.findOneAndRemove(conditions, [options], [callback])`: Finds a single document that matches the given conditions, removes it from the database, and returns the removed document. Example:
+
+```
+Model.findOneAndRemove({ name: 'John' }, (err, doc) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(doc);
+  }
+});
+```
+
+19. `Model.insertMany(docs, [options], [callback])`: Inserts an array of documents into the database. Example:
+
+```
+const docs = [
+  { name: 'John', age: 25 },
+  { name: 'Jane', age: 30 }
+];
+
+Model.insertMany(docs, (err, docs) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(docs);
+  }
+});
+```
+
+20. `Model.deleteOne(conditions, [callback])`: Deletes the first document that matches the given conditions. Example:
+
+```
+Model.deleteOne({ name: 'John' }, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Document deleted');
+  }
+});
+```
+
+21. `Model.deleteMany(conditions, [callback])`: Deletes all documents that match the given conditions. Example:
+
+```
+Model.deleteMany({ age: { $gte: 18, $lte: 25 } }, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Documents deleted');
+  }
+});
+```
+
+22. `Model.watch([pipeline], [options])`: Opens a change stream on the collection, which allows you to watch for changes to the data in real time. Example:
+
+```
+const changeStream = Model.watch();
+
+changeStream.on('change', (change) => {
+  console.log(change);
+});
+```
+
+23. `Model.createIndexes()`: Creates indexes on all fields that have been marked as indexed in the schema. Example:
+
+```
+Model.createIndexes((err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Indexes created');
+  }
+});
+```
+
+24. `Model.collection.drop([callback])`: Drops the entire collection from the database. Example:
+
+```
+Model.collection.drop((err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Collection dropped');
+  }
+});
+```
+
+25. `Model.count([conditions], [callback])`: Counts the number of documents in the collection. Example:
+
+```
+Model.count((err, count) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(count);
+  }
+});
+```
+
+26. `Model.ensureIndexes([callback])`: Ensures that all indexes on the collection are up to date with the schema definition. Example:
+
+```
+Model.ensureIndexes((err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Indexes ensured');
+  }
+});
+```
+
+27. `Model.geoNear(point, [options], [callback])`: Performs a geospatial search on the collection, returning documents in order of proximity to the specified point. Example:
+
+```
+const point = {
+  type: 'Point',
+  coordinates: [-73.97, 40.77]
+};
+
+Model.geoNear(point, { maxDistance: 1000, spherical: true }, (err, results) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(results);
+  }
+});
+```
+
+28. `Model.geoSearch(conditions, [options], [callback])`: Searches for documents within a specified geographic area. Example:
+
+```
+Model.geoSearch({
+  type: 'Polygon',
+  coordinates: [[[-122.508, 37.708], [-122.358, 37.708], [-122.358, 37.818], [-122.508, 37.818], [-122.508, 37.708]]]
+}, {
+  near: [37.7749, -122.4194],
+  maxDistance: 10
+}, (err, results) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(results);
+  }
+});
+```
+
+In the `geoSearch` example, we are searching for documents within a polygonal region defined by the `coordinates` array, and we are specifying that we only want to return results that are within 10 miles of the point `[37.7749, -122.4194]`.
+
+29. `Model.updateMany(conditions, update, [options], [callback])`: Updates all documents that match the given conditions with the specified update. Example:
+
+```
+Model.updateMany({ age: { $gte: 18, $lte: 25 } }, { isAdult: true }, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Documents updated');
+  }
+});
+```
+
+30. `Model.watch([pipeline], [options])`: Opens a change stream on the collection, which allows you to watch for changes to the data in real time. Example:
+
+```
+const changeStream = Model.watch();
+
+changeStream.on('change', (change) => {
+  console.log(change);
+});
+```
     
     
 ![Dark_pages-to-jpg-0001](https://user-images.githubusercontent.com/108695777/231220392-11314396-21f9-47c0-88f3-2602c0954630.jpg)
