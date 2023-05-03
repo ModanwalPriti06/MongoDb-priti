@@ -1059,6 +1059,109 @@ changeStream.on('change', (change) => {
   console.log(change);
 });
 ```
+   
+   <h2>Options</h2>
+   Sure, I'd be happy to explain what `[options]` is in Mongoose, and provide some code examples to illustrate its usage.
+
+In Mongoose, `[options]` is an optional parameter that can be passed to many of the different query and update methods. This parameter allows you to specify various options that modify the behavior of the query or update operation. Here are some of the most commonly used options:
+
+- `lean`: If set to `true`, the query will return plain JavaScript objects instead of Mongoose documents. This can improve performance, since you won't have to convert the documents to plain objects yourself. Example:
+
+  ```
+  Model.find({}).lean().exec((err, docs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(docs);
+    }
+  });
+  ```
+
+- `select`: Specifies which fields to include or exclude from the query results. You can either include the fields you want, or exclude the fields you don't want. Example:
+
+  ```
+  Model.find({}).select('name age').exec((err, docs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(docs);
+    }
+  });
+  ```
+
+- `sort`: Specifies the order in which to sort the query results. You can either sort in ascending order (1) or descending order (-1). Example:
+
+  ```
+  Model.find({}).sort({ age: -1 }).exec((err, docs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(docs);
+    }
+  });
+  ```
+
+- `limit`: Specifies the maximum number of documents to return in the query results. Example:
+
+  ```
+  Model.find({}).limit(10).exec((err, docs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(docs);
+    }
+  });
+  ```
+
+- `skip`: Specifies the number of documents to skip before returning the query results. Example:
+
+  ```
+  Model.find({}).skip(10).exec((err, docs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(docs);
+    }
+  });
+  ```
+
+- `new`: If set to `true`, the update methods (`update`, `findOneAndUpdate`, etc.) will return the updated document instead of the original document. Example:
+
+  ```
+  Model.updateOne({ name: 'John' }, { age: 30 }, { new: true }, (err, doc) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(doc);
+    }
+  });
+  ```
+
+- `upsert`: If set to `true`, the update methods will create a new document if no document is found that matches the query criteria. Example:
+
+  ```
+  Model.updateOne({ name: 'John' }, { age: 30 }, { upsert: true }, (err, doc) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(doc);
+    }
+  });
+  ```
+
+- `populate`: Populates referenced documents with their actual contents (useful for populating a referenced document in a one-to-one or one-to-many relationship). Example:
+
+  ```
+  Model.find({}).populate('friends').exec((err, docs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(docs);
+    }
+  });
+  ```
+
+These are just a few of the most commonly used options in Mongoose. There are many more options available, so I encourage you to read the Mongoose documentation for a full list.
     
     
 ![Dark_pages-to-jpg-0001](https://user-images.githubusercontent.com/108695777/231220392-11314396-21f9-47c0-88f3-2602c0954630.jpg)
