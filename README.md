@@ -21,13 +21,15 @@
 <li>MongoDB is known for its high performance and ease of use, making it a popular choice for developers looking for a flexible and scalable database solution.</li>
 </ol>
 
+<h1>MongoDB vs Compass vs Mongosh</h1>
 <ul>
 <li>MongoDB is a NoSQL document database used to store and manage data in a flexible JSON-like format.</li>
 <li>Compass is a GUI tool for MongoDB that provides a visual interface to explore data, build queries, and manage databases.</li>
 <li>Mongosh is an interactive command-line shell and scripting environment for MongoDB that allows users to perform database operations, run queries, and automate tasks using JavaScript.</li>
 </ul>
 
-<h2>Mongosh getting started</h2>
+
+<h2>Using Mongosh => getting started</h2>
 
 ```
 use newlocal2                                       //use newlocal2 db, makes one if not present
@@ -36,7 +38,134 @@ db.newcollection.insertOne({name:"user1"})          //insert a document
 ```
 
 
-<h2> More commands for mongo </h2>
+<h2> MongoDB commands </h2>
+
+Sure, here are some examples of these commands:
+
+Query Commands:
+1. `db.collection.find(query, projection)` - finds documents in a collection that match a specified query.
+
+```
+db.users.find({age: {$gt: 30}}, {name: 1, age: 1, _id: 0})
+```
+
+This query will find all documents in the "users" collection where the "age" field is greater than 30 and return only the "name" and "age" fields (excluding the "_id" field).
+
+2. `db.collection.findOne(query, projection)` - finds and returns the first document that matches a specified query.
+
+```
+db.users.findOne({name: "John Doe"})
+```
+
+This query will find the first document in the "users" collection where the "name" field is "John Doe".
+
+3. `db.collection.count(query)` - returns the count of documents in a collection that match a specified query.
+
+```
+db.users.count({age: {$gt: 30}})
+```
+
+This query will count the number of documents in the "users" collection where the "age" field is greater than 30.
+
+4. `db.collection.aggregate(pipeline)` - performs aggregation operations on a collection, such as grouping and sorting.
+
+```
+db.orders.aggregate([
+   { $match: { status: "completed" } },
+   { $group: { _id: "$product", total: { $sum: "$quantity" } } },
+   { $sort: { total: -1 } }
+])
+```
+
+This query will first filter the documents in the "orders" collection where the "status" field is "completed", then group the documents by the "product" field and calculate the total quantity for each product, and finally sort the results by the total quantity in descending order.
+
+Update Commands:
+1. `db.collection.updateOne(filter, update, options)` - updates a single document that matches the specified filter.
+
+```
+db.users.updateOne(
+   { name: "John Doe" },
+   { $set: { age: 35 } }
+)
+```
+
+This command will update the first document in the "users" collection where the "name" field is "John Doe" and set the "age" field to 35.
+
+2. `db.collection.updateMany(filter, update, options)` - updates multiple documents that match the specified filter.
+
+```
+db.users.updateMany(
+   { age: {$lt: 18} },
+   { $set: { status: "minor" } }
+)
+```
+
+This command will update all documents in the "users" collection where the "age" field is less than 18 and set the "status" field to "minor".
+
+3. `db.collection.replaceOne(filter, replacement, options)` - replaces a single document that matches the specified filter.
+
+```
+db.users.replaceOne(
+   { name: "John Doe" },
+   { name: "Jane Doe", age: 35 }
+)
+```
+
+This command will replace the first document in the "users" collection where the "name" field is "John Doe" with a new document that has the "name" field set to "Jane Doe" and the "age" field set to 35.
+
+4. `db.collection.update(filter, update, options)` - updates one or more documents that match the specified filter.
+
+```
+db.users.update(
+   { name: "John Doe" },
+   { $set: { age: 35 } },
+   { multi: true }
+)
+```
+
+This command will update all documents in the "users" collection where the "name" field is "John Doe" and set the "age" field to 35.
+
+Other Important Commands:
+1. `db.collection.insertOne(document)` - inserts a single document into a collection.
+
+```
+db.users.insertOne(
+   { name: "John Doe", age: 30, status: "active" }
+)
+```
+
+This command will insert a new document into the "users" collection with the fields "name", "age", and "status" set to "John Doe", 30, and "active", respectively.
+
+2. `db.collection.insertMany(documents)` - inserts multiple documents into a collection.
+
+```
+db.users.insertMany([
+   { name: "Jane Doe", age: 25, status: "active" },
+   { name: "Bob Smith", age: 40, status: "inactive" }
+])
+```
+
+This command will insert two new documents into the "users" collection, one with the fields "name", "age", and "status" set to "Jane Doe", 25, and "active", respectively, and the other with the fields "name", "age", and "status" set to "Bob Smith", 40, and "inactive", respectively.
+
+3. `db.collection.deleteOne(filter)` - deletes a single document that matches the specified filter.
+
+```
+db.users.deleteOne({ name: "John Doe" })
+```
+
+This command will delete the first document in the "users" collection where the "name" field is "John Doe".
+
+4. `db.collection.deleteMany(filter)` - deletes multiple documents that match the specified filter.
+
+```
+db.users.deleteMany({ status: "inactive" })
+```
+
+This command will delete all documents in the "users" collection where the "status" field is "inactive".
+
+Note: Please note that these are just some basic examples and the actual query and update commands may vary depending on your specific use case and requirements.
+
+
 <ul>
     <li>Model.findById()</li>
     <li>Model.findByIdAndDelete()</li>
