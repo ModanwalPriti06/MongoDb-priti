@@ -668,8 +668,6 @@ The aggregation pipeline is a powerful tool for performing complex data analysis
 
 <h1>Mongoose Commands</h1>
 
-Sure, here are all 30 important Mongoose commands with their descriptions and example usage:
-
 1. `mongoose.connect(uri, [options])`: Connects to a MongoDB database using the specified connection string. Example:
 
 ```
@@ -754,6 +752,10 @@ Model.find({}).sort({ name: 'asc' }).skip(10).limit(5).exec((err, docs) => {
     console.log(docs);
   }
 });
+
+------------------------------------------------------------------------------------
+   
+db.user_details.find({age:{$gt:10}},{name:1, age:1, _id:0},{limit:6, sort:{age:-1}})
 ```
 
 8. `Model.findByIdAndDelete(id, [options], [callback])`: Finds a single document by its `_id` field, deletes it from the database, and returns the deleted document. Example:
