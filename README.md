@@ -185,6 +185,9 @@ Note: Please note that these are just some basic examples and the actual query a
 
 **It is a wrapper shell around MongoDb terminal, all the commands of MongoDb are available in Mongoose**
 
+**Run below commands to get started**
+
+
 ```
 Terminal
 npm init -y
@@ -192,6 +195,19 @@ npm i mongoose
 npm install --save-dev nodemon
 ------------------------------------------------------------------------
 ```
+
+
+•select() is a method of Mongoose that is used to select document fields that are to be returned in the query result. It is used to include or exclude document fields that are returned from a Mongoose query. The select() method performs what is called query projection.
+
+```
+// return only fields a and b
+query.select("a b")
+
+// same as the one above
+query.select({a: 1, b: 1})
+```
+
+
 
 <h2>2 ways to execute Queries</h2>
 
