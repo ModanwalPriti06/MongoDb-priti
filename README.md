@@ -28,8 +28,11 @@
 <li>Mongosh is an interactive command-line shell and scripting environment for MongoDB that allows users to perform database operations, run queries, and automate tasks using JavaScript.</li>
 </ul>
 
+<h2> Heirarchy in mongo </h2>
+databse => </br> many collections together in one db => </br> One collection(eg-users) is an Array of documents(record) => </br> one document is collection of fields => </br> one field is eg;- name:"user1" </br>
 
-<h2>Using Mongosh => getting started</h2>
+
+<h2>Using Mongosh terminal => getting started</h2>
 
 ```
 use newlocal2                                       //use newlocal2 db, makes one if not present
@@ -38,11 +41,11 @@ db.newcollection.insertOne({name:"user1"})          //insert a document
 ```
 
 
-<h2> MongoDB commands </h2>
+<h1> MongoDB commands </h1>
 
 Sure, here are some examples of these commands:
 
-Query Commands:
+<h3>Query Commands:</h3>
 1. `db.collection.find(query, projection)` - finds documents in a collection that match a specified query.
 
 ```
@@ -79,7 +82,7 @@ db.orders.aggregate([
 
 This query will first filter the documents in the "orders" collection where the "status" field is "completed", then group the documents by the "product" field and calculate the total quantity for each product, and finally sort the results by the total quantity in descending order.
 
-Update Commands:
+<h3>Update Commands:</h3>
 1. `db.collection.updateOne(filter, update, options)` - updates a single document that matches the specified filter.
 
 ```
@@ -125,7 +128,7 @@ db.users.update(
 
 This command will update all documents in the "users" collection where the "name" field is "John Doe" and set the "age" field to 35.
 
-Other Important Commands:
+<h3>Other Important Commands:</h3>
 1. `db.collection.insertOne(document)` - inserts a single document into a collection.
 
 ```
@@ -178,12 +181,7 @@ Note: Please note that these are just some basic examples and the actual query a
     <li>Model.replaceOne()</li>
 </ul>
 
-<h2> Heirarchy in mongo </h2>
-databse => </br> many collections together in one db => </br> One collection(eg-users) is an Array of documents(record) => </br> one document is collection of fields => </br> one field is eg;- name:"user1" </br>
-
-
-
-<h2>MONGOOSE</h2>
+<h1>MONGOOSE in Node</h1>
 
 **It is a wrapper shell around MongoDb terminal, all the commands of MongoDb are available in Mongoose**
 
