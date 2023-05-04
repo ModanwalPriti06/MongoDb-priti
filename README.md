@@ -43,7 +43,12 @@ db.newcollection.insertOne({name:"user1"})          //insert a document
 
 <h1> MongoDB commands </h1>
 
-Sure, here are some examples of these commands:
+```
+eg-
+db.user_details.find({age:27}).limit(2).sort({name:1})
+```
+
+***Below are commonly used commands***
 
 <h3>Query Commands:</h3>
 1. `db.collection.find(query, projection)` - finds documents in a collection that match a specified query.
