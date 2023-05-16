@@ -364,7 +364,7 @@ const userSchema = new mongoose.Schema({
     Street: String,
     City: String,
   },
-  address2: addressSchema,                              //Defining a field named "address2" in your schema, and the value of this field should adhere to the structure defined in the                                                             "addressSchema".
+  address2: addressSchema,                              //Defining a field named "address2" in your schema, and the value of this field should adhere to the structure defined in the "addressSchema".
   email2: {type String, lowercase:true},                //string will be converted into lowercase before being saved
   createdAt: {
   immutable:true,                                       //It cannot be changed once set
