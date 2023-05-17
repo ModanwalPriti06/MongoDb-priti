@@ -23,4 +23,4 @@ userSchema.methods.sayHi = function(){
     console.log(`say hi to ${this.name}`);
 }
 
-module.exports = mongoose.model("userInCollection", userSchema)
+module.exports = mongoose.model("userInCollection", userSchema)     // userInCollection => collection name

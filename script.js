@@ -5,13 +5,23 @@ const UserModel = require("./User"); //importing model
 run()
 async function run() {
   try{
-  const user = await new UserModel({                        //Method 1 => create instance of model
+  const user = new UserModel({                        //Method 1 => create instance of model
     name: "john",
+    email: "john@example.com",
     age: 22,
+    address:{
+      Street: "street",
+      City: "city"
+    }
   });
-  const user2 = await UserModel.create({                    //Method 2 => create instance of model
+  const user2 = await UserModel.create({                    //Method 2 => create instance of model, this returns a promise so needs to be used with await keyword
     name: "kyle",
+    email: "kyle@example.com",
     age: 23,
+    address2:{
+      Street: "street2",
+      City: "city2"
+    }
   })
 
   await user2.save()
@@ -19,7 +29,6 @@ async function run() {
   await console.log("this should be my last output"+user2);
 }
 catch(e){
-  console.log(e.message)                                    // e.message gives just the message
+  console.log("error message is ",e.message)                                    // e.message gives just the message
 }
-
 }
