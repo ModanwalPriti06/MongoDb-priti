@@ -1167,6 +1167,22 @@ In Mongoose, `[options]` is an optional parameter that can be passed to many of 
     }
   });
   ```
+- `distinct`: gives distinct values taken up by a field inside the whole collection
+
+  ```
+  db.getCollection("projects").distinct('status')
+  ==>
+  "Completed",
+    "Factory",
+    "IMOS",
+    "Ready for dispatch",
+    "Scoping",
+    "Site QC",
+    "Under Execution",
+    "Under Procurement",
+    "Under Production - Fixing",
+    "Under Production - Machine"
+  ```
 
 These are just a few of the most commonly used options in Mongoose. There are many more options available, so I encourage you to read the Mongoose documentation for a full list.
     
