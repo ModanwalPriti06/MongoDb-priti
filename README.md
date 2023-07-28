@@ -552,6 +552,13 @@ The $match stage is similar to the "find" method in MongoDB. It allows you to fi
 db.orders.aggregate([
    { $match : { status : "A" } }
 ])
+
+//another example
+
+db.getCollection("projects").aggregate([
+  {$match: {status: {$nin: ["Completed", "Site QC"]}}}
+]);
+
 ```
 
 This will return all the documents in the "orders" collection that have a "status" field equal to "A".
