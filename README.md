@@ -680,6 +680,37 @@ These are the main stages in the MongoDB aggregation pipeline. By combining thes
 
 The aggregation pipeline is a powerful tool for performing complex data analysis and processing in MongoDB. It allows you to combine multiple operations into a single query, which can improve performance and reduce the amount of data transferred between the database and the client.
 
+<h3>Aggregation Examples</h3>
+
+```
+db.orders.aggregate( [
+
+   // Stage 1: Filter pizza order documents by date range
+   {
+      $match:
+      {
+         "date": { $gte: new ISODate( "2020-01-30" ), $lt: new ISODate( "2022-01-30" ) }
+      }
+   },
+
+   // Stage 2: Group remaining documents by date and calculate results
+   {
+      $group:
+      {
+         _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+         totalOrderValue: { $sum: { $multiply: [ "$price", "$quantity" ] } },
+         averageOrderQuantity: { $avg: "$quantity" }
+      }
+   },
+
+   // Stage 3: Sort documents by totalOrderValue in descending order
+   {
+      $sort: { totalOrderValue: -1 }
+   }
+
+ ] )
+ ```
+
 <h1>Mongoose Commands</h1>
 
 1. `mongoose.connect(uri, [options])`: Connects to a MongoDB database using the specified connection string. Example:
