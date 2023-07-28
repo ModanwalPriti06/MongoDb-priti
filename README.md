@@ -559,6 +559,20 @@ db.getCollection("projects").aggregate([
   {$match: {status: {$nin: ["Completed", "Site QC"]}}}
 ]);
 
+//Another example
+db.sales.aggregate([
+  {
+    $match: {
+      $or: [
+        { amount: { $gte: 5000 } }, // Filter documents where 'amount' is greater than or equal to 5000
+        { category: "Electronics" }, // Filter documents where 'category' is "Electronics"
+        { date: { $gte: ISODate("2023-01-01"), $lt: ISODate("2023-02-01") } } // Filter documents within a specific date range
+        // Add more filter conditions inside the $or array as needed
+      ]
+    }
+  }
+]);
+
 ```
 
 This will return all the documents in the "orders" collection that have a "status" field equal to "A".
