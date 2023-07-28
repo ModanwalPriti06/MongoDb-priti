@@ -646,6 +646,16 @@ The $unwind stage allows you to deconstruct an array field in the documents into
 db.orders.aggregate([
    { $unwind : "$items" }
 ])
+
+if array is empty it will not include the document at all; i.e d filter it out
+//Another example
+{
+  $unwind:
+    {
+      path: "$job_activity",
+      preserveNullAndEmptyArrays: true
+    }
+}
 ```
 
 This will return a new set of documents, with one document for each item in the "items" array field.
