@@ -1129,8 +1129,7 @@ changeStream.on('change', (change) => {
 });
 ```
    
-   <h2>Options</h2>
-   Sure, I'd be happy to explain what `[options]` is in Mongoose, and provide some code examples to illustrate its usage.
+<h2>Options</h2>
 
 In Mongoose, `[options]` is an optional parameter that can be passed to many of the different query and update methods. This parameter allows you to specify various options that modify the behavior of the query or update operation. Here are some of the most commonly used options:
 
@@ -1246,7 +1245,140 @@ In Mongoose, `[options]` is an optional parameter that can be passed to many of 
     "Under Production - Machine"
   ```
 
-These are just a few of the most commonly used options in Mongoose. There are many more options available, so I encourage you to read the Mongoose documentation for a full list.
+  <h2>Mongoose Middleware - PRE & POST functions</h2>
+
+**Schema File => Middleware functions are applied here on schema level, BEFORE making a model, if you want to apply it on model/document level, you can add those in the routing file/enviornment**
+
+  ```
+  const mongoose = require("mongoose");
+
+const ModelMiddlewareSchema = new mongoose.Schema({
+  stage: {
+    type: String
+  },
+  stageChangeDate: {
+    type: Date
+  }
+});
+
+ModelMiddlewareSchema.pre('update', function(next) {
+    console.log('pre middleware is fired update')
+    const currentStatus = this.stage
+  
+    if(this.isModified('stage')) {
+      const newStatus = this.status
+
+      if (currentStatus === 'stage1' && newStatus === 'stage2') {
+        this.stageChangeDate = new Date()
+        console.log('new date is added')
+      }
+    }
+    next();
+  });
+
+ModelMiddlewareSchema.pre('save', function(next) {
+    console.log('pre middleware is fired save')
+    const currentStatus = this.stage
+  
+    if(this.isModified('stage')) {
+      const newStatus = this.status
+
+      if (currentStatus === 'stage1' && newStatus === 'stage2') {
+        this.stageChangeDate = new Date()
+        console.log('new date is added')
+      }
+    }
+    next();
+  });
+
+ModelMiddlewareSchema.pre('findOneAndUpdate', async function(next) {
+    console.log('pre middleware is fired findOneAndUpdate')
+
+    const update = this.getUpdate(); // Access the update object,
+
+    console.log('update is ', update)   => { '$set': { stage: 'stage2' } }
+
+  if (update && update['$set'].stage) {
+    console.log('hiiii')
+    const document = await this.findOne();  // we are accessing the current document as we cannot access the current document directly from the update object we need to use the findOne() function 
+    
+    console.log('document is ', document) // document is  {
+  // _id: 64d4c9f7ec37e5a0005a4d8c,
+  // stage: 'stage1',
+  // stageChangeDate: null,
+  // __v: 0
+// }
+    const currentStatus = document.stage;
+    const updatedStatus = update['$set'].stage;
+    console.log('currentStatus is ', currentStatus)
+    console.log('updatedStatus is ', updatedStatus)
+
+    if (currentStatus === 'stage1' && updatedStatus === 'stage2') {
+    update.$set.stageChangeDate = new Date();
+    console.log('update after adding date is ', update)
+    }
+  }
+    next();
+  });
+
+const ModelMiddleware = mongoose.model('ModelMiddleware', ModelMiddlewareSchema);
+
+module.exports = ModelMiddleware;
+```
+
+**Route file**
+
+```
+const ModelMiddleware = require('../models/modelMiddlewareCheck');
+const express = require('express');
+const router = express.Router();
+
+router.put('/', async (req, res) => {
+  try {
+    console.log('req received as', req.body);
+    const newDoc = new ModelMiddleware();
+    newDoc.stage = 'stage1';
+    newDoc.stageChangeDate= null;
+    await newDoc.save();
+    return res.status(200).send('stage1 created successfully');
+  } catch (err) {
+    console.log(err);
+    res.status(400).send('unsuccessful operation');
+  }
+});
+
+router.put('/changestage', async (req, res) =>{
+    try{
+    const id = req.query.id;
+    const filter = {'_id': id};
+    const update = {$set: {stage: 'stage2'}};
+    ModelMiddleware.findOneAndUpdate(filter,update).then(updatedDocument => {
+        if (!updatedDocument) {
+          // Handle case when document is not found
+          console.log('Document not found.');
+        } else {
+        //   console.log('Document updated:', updatedDocument);
+        }
+      })
+      .catch(error => {
+        console.error('Error updating document:', error);
+      });
+
+    res.status(200).send('succefully updated')
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).send('unsuccsefull')
+    }
+})
+
+router.put('/deleteAll', async (req, res) => {
+    ModelMiddleware.deleteMany({}).then(() => res.status(200).send('succefully deleted'))
+})
+
+module.exports = router;
+```
+
     
     
 ![Dark_pages-to-jpg-0001](https://user-images.githubusercontent.com/108695777/231220392-11314396-21f9-47c0-88f3-2602c0954630.jpg)
