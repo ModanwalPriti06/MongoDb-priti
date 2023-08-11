@@ -762,7 +762,38 @@ db.orders.aggregate([
 ]);
 ```
 
-In this example, the `$multiply` and `$subtract` operators are used within the `$project` stage to perform arithmetic operations on fields and calculate new values. Adapt this example to match your specific use case and the fields you're working with.
+In above example, the `$multiply` and `$subtract` operators are used within the `$project` stage to perform arithmetic operations on fields and calculate new values. Adapt this example to match your specific use case and the fields you're working with.
+
+
+6>) **$addFields:** Use this operator to add new field in pipeline; $project: can also kinda do this but differently
+```
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: 'customers',          // The second collection name
+      localField: 'customerId',   // The field in the 'orders' collection
+      foreignField: '_id',        // The corresponding field in the 'customers' collection
+      as: 'customerInfo'          // Alias for the joined data
+    }
+  },
+  {
+    $addFields: {
+      customerNames: {
+        $map: {
+          input: '$customerInfo',        // Input array (customerInfo)
+          as: 'customer',                // Variable to represent each element
+          in: '$$customer.name'          // Access the 'name' field of each customer
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      customerInfo: 0  // Remove the 'customerInfo' field if not needed
+    }
+  }
+]);
+```
 
 This will create a new collection called "processed_orders" and write the results of the aggregation pipeline to that collection.
 
