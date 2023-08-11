@@ -698,6 +698,72 @@ db.orders.aggregate([
 ])
 ```
 
+<h2>More Aggregation Methods</h2>
+
+In MongoDB aggregation pipelines, you can perform arithmetic operations using various aggregation operators that are provided by MongoDB. Here are some commonly used arithmetic operators for performing arithmetic operations within aggregation pipelines:
+
+1. **$add**: Adds numbers together or performs date arithmetic.
+   
+   Example:
+   ```
+   {
+     $add: [ "$field1", "$field2" ] // Adds the values of field1 and field2
+   }
+   ```
+
+2. **$subtract**: Subtracts one number from another or performs date arithmetic.
+   
+   Example:
+   ```
+   {
+     $subtract: [ "$field1", "$field2" ] // Subtracts the value of field2 from field1
+   }
+   ```
+
+3. **$multiply**: Multiplies numbers together.
+   
+   Example:
+   ```
+   {
+     $multiply: [ "$quantity", "$price" ] // Multiplies the values of quantity and price
+   }
+   ```
+
+4. **$divide**: Divides one number by another.
+   
+   Example:
+   ```
+   {
+     $divide: [ "$totalAmount", "$numItems" ] // Divides the value of totalAmount by numItems
+   }
+   ```
+
+5. **$mod**: Calculates the remainder of the division of two numbers.
+   
+   Example:
+   ```
+   {
+     $mod: [ "$totalAmount", 10 ] // Calculates the remainder of totalAmount divided by 10
+   }
+   ```
+
+These operators can be used in the `$project` stage of your aggregation pipeline to create new fields or modify existing fields based on arithmetic operations. Here's an example of how you might use them:
+
+```
+db.orders.aggregate([
+  {
+    $project: {
+      item: 1,
+      totalAmount: { $multiply: [ "$quantity", "$price" ] }, // Calculate totalAmount
+      discountedAmount: { $subtract: [ "$totalAmount", "$discount" ] }, // Calculate discountedAmount
+      taxAmount: { $multiply: [ "$totalAmount", 0.1 ] } // Calculate taxAmount (assuming 10% tax)
+    }
+  }
+]);
+```
+
+In this example, the `$multiply` and `$subtract` operators are used within the `$project` stage to perform arithmetic operations on fields and calculate new values. Adapt this example to match your specific use case and the fields you're working with.
+
 This will create a new collection called "processed_orders" and write the results of the aggregation pipeline to that collection.
 
 These are the main stages in the MongoDB aggregation pipeline. By combining these stages in various ways, you can perform complex data processing and analysis on your MongoDB collections.
