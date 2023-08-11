@@ -50,6 +50,14 @@ db.user_details.find({age:27}).limit(2).sort({name:1})
 
 ***Below are commonly used commands***
 
+# Query Vs Aggregration pipeline
+
+`>` Query - A query is a request for data from a database that matches certain criteria. It's used to retrieve specific documents that meet a set of conditions. In MongoDB, queries are structured using the find() method or its variations, where you provide a filter to specify the conditions that documents must satisfy in order to be returned in the query result. 
+```
+db.collection.find({ age: { $gte: 18 } })
+```
+
+
 <h3>Query Commands:</h3>
 1. `db.collection.find(query, projection)` - finds documents in a collection that match a specified query.
 
@@ -211,7 +219,6 @@ query.select("a b")
 // same as the one above
 query.select({a: 1, b: 1})
 ```
-
 
 
 <h2>2 ways to execute Queries</h2>
@@ -1378,24 +1385,6 @@ router.put('/deleteAll', async (req, res) => {
 
 module.exports = router;
 ```
-
-# Query Vs Aggregration pipeline
-
-`>` Query - A query is a request for data from a database that matches certain criteria. It's used to retrieve specific documents that meet a set of conditions. In MongoDB, queries are structured using the find() method or its variations, where you provide a filter to specify the conditions that documents must satisfy in order to be returned in the query result. 
-```
-db.collection.find({ age: { $gte: 18 } })
-```
-
-`>` Aggregation - (A set of operator which are run sequntially in a certain way.) An aggregation pipeline is a powerful framework for performing data transformation and processing tasks on the data in a database. It's used to perform complex operations on the data such as grouping, sorting, filtering, and applying various stages of data manipulation. The aggregation pipeline consists of multiple stages, where each stage processes the input documents and passes the result to the next stage. Each stage can apply different operations using aggregation operators.
-```
-db.orders.aggregate([
-    { $group: { _id: "$productCategory", totalRevenue: { $sum: "$price" } } },
-    { $sort: { totalRevenue: -1 } }
-])
-```
----
-
-    
     
 ![Dark_pages-to-jpg-0001](https://user-images.githubusercontent.com/108695777/231220392-11314396-21f9-47c0-88f3-2602c0954630.jpg)
 ![Dark_pages-to-jpg-0002](https://user-images.githubusercontent.com/108695777/231220470-755aec9b-f81c-4d55-a57c-e417ce0ab685.jpg)
