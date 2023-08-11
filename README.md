@@ -1308,7 +1308,7 @@ ModelMiddlewareSchema.pre('findOneAndUpdate', async function(next) {
   if (update && update['$set'].stage) {
     console.log('hiiii')
     const document = await this.findOne();  // we are accessing the current document as we cannot access the current document directly from the update object we need to use the findOne() function 
-    
+    const project = await Project.findOne(); //we can access other models within this file to do as we may require.
     console.log('document is ', document) // document is  {
   // _id: 64d4c9f7ec37e5a0005a4d8c,
   // stage: 'stage1',
