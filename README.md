@@ -667,9 +667,7 @@ g.) **$and** (Logical AND) and **$or** (Logical OR):
    }
    ```
 
-```
 
-This will return all the documents in the "orders" collection that have a "status" field equal to "A".
 
 2. $project: Selects and transforms fields in the documents.
 
@@ -942,7 +940,112 @@ If you want to replace null values in a field with a default value:
 }
 ```
 
-5.)
+5.) **$arrayElemAt** - This operator in MongoDB's aggregation pipeline is used to extract an element from an array at a specified index position. Here's an example of how you can use the $arrayElemAt operator:
+
+```
+{
+  "_id": 1,
+  "name": "John Doe",
+  "skills": ["Programming", "Communication", "Problem Solving", "Teamwork"]
+}
+
+```
+Applying $arrayElemAt
+```
+db.employees.aggregate([
+  {
+    $project: {
+      name: 1,
+      thirdSkill: { $arrayElemAt: ["$skills", 2] }
+    }
+  }
+]);
+```
+Output
+
+```
+{
+  "_id": 1,
+  "name": "John Doe",
+  "thirdSkill": "Problem Solving"
+}
+```
+
+*Example 2*
+
+For Array Of Objects
+
+```
+{
+  "_id": 1,
+  "name": "Alice",
+  "subjects": [
+    { "name": "Math", "teacher": "Mr. Smith" },
+    { "name": "History", "teacher": "Mrs. Johnson" },
+    { "name": "Science", "teacher": "Mr. Brown" }
+  ]
+}
+```
+
+```
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      secondSubject: { $arrayElemAt: ["$subjects.name", 1] }
+    }
+  }
+]);
+```
+In this example, the $project stage uses the $arrayElemAt operator to extract the name of the second subject from the subjects array of each student. The first argument to $arrayElemAt is the array field you want to extract from ($subjects.name), and the second argument is the index position (0-based) of the element you want to extract (1).
+
+```
+{
+  "_id": 1,
+  "name": "Alice",
+  "secondSubject": "History"
+}
+```
+
+Example 3 - Suppose you want to select the name of the second subject only if the teacher for the second subject is "Mrs. Johnson". Otherwise, you want to select "No Match".
+
+```
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      selectedSubject: {
+        $cond: {
+          if: { $eq: [{ $arrayElemAt: ["$subjects.teacher", 1] }, "Mrs. Johnson"] },
+          then: { $arrayElemAt: ["$subjects.name", 1] },
+          else: "No Match"
+        }
+      }
+    }
+  }
+]);
+```
+
+In this example, the $cond operator evaluates the condition inside its if field. If the condition is met (teacher of the second subject is "Mrs. Johnson"), it selects the name of the second subject using the $arrayElemAt operator in the then field. If the condition is not met, it selects "No Match" in the else field.
+
+```
+{
+  "_id": 1,
+  "name": "Alice",
+  "selectedSubject": "History"
+}
+```
+
+If the teacher of the second subject were not "Mrs. Johnson", the output would be:
+
+```
+{
+  "_id": 1,
+  "name": "Alice",
+  "selectedSubject": "No Match"
+}
+```
+
 
 <h1>Mongoose Commands</h1>
 
