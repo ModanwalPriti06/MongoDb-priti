@@ -765,7 +765,7 @@ db.orders.aggregate([
 In above example, the `$multiply` and `$subtract` operators are used within the `$project` stage to perform arithmetic operations on fields and calculate new values. Adapt this example to match your specific use case and the fields you're working with.
 
 
-6>) **$addFields:** Use this operator to add new field in pipeline; $project: can also kinda do this but differently
+6.) **$addFields:** Use this operator to add new field in pipeline; $project: can also kinda do this but differently
 ```
 db.orders.aggregate([
   {
@@ -794,6 +794,71 @@ db.orders.aggregate([
   }
 ]);
 ```
+
+7.) **$cond** - The $cond operator evaluates a condition and returns one of two specified expressions based on the result of the evaluation.
+
+Example:
+Suppose you want to categorize orders as "High Value" if the total amount is greater than $1000, otherwise categorize them as "Low Value".
+
+```
+{
+  $project: {
+    orderNumber: 1,
+    category: {
+      $cond: {
+        if: { $gt: ['$totalAmount', 1000] },
+        then: 'High Value',
+        else: 'Low Value'
+      }
+    }
+  }
+}
+```
+
+8.) **$switch** - The $switch operator performs conditional logic similar to a switch statement in programming languages.
+
+```
+{
+  $project: {
+    productId: 1,
+    category: {
+      $switch: {
+        branches: [
+          { case: { $eq: ['$type1', 'Electronics'] }, then: 'Electronics' },
+          { case: { $eq: ['$type2', 'Clothing'] }, then: 'Apparel' },
+          { case: { $eq: ['$type3', 'Groceries'] }, then: 'Food' },
+          { case: { $eq: ['$type4', 'Books'] }, then: 'Books' },
+          { case: { $eq: ['$type5', 'Furniture'] }, then: 'Home' },
+          { case: { $eq: ['$type6', 'Sports'] }, then: 'Sports' },
+          { case: { $eq: ['$type7', 'Toys'] }, then: 'Toys' }
+        ],
+        default: 'Other'
+      }
+    }
+  }
+}
+```
+
+9.) **$ifNull** :
+The $ifNull operator checks if the specified expression is null and returns a default value if it is.
+
+Example:
+If you want to replace null values in a field with a default value:
+
+```
+{
+  $project: {
+    productName: 1,
+    price: { $ifNull: ['$price', 0] }  // Replace null prices with 0
+  }
+}
+```
+
+Example:
+If you have multiple fields representing different types of products and you want to assign a category based on those fields:
+
+
+
 
 This will create a new collection called "processed_orders" and write the results of the aggregation pipeline to that collection.
 
