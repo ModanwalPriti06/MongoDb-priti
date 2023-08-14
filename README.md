@@ -864,7 +864,7 @@ db.orders.aggregate([
   },
   {
     $addFields: {
-      customerNames: {
+      customerNames: {                   // customerNames will be an array of names from each object in customerInfo array
         $map: {
           input: '$customerInfo',        // Input array (customerInfo)
           as: 'customer',                // Variable to represent each element
