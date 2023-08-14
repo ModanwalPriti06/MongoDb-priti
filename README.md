@@ -556,29 +556,117 @@ Sure, here's an explanation of all the stages in the MongoDB aggregation pipelin
 The $match stage is similar to the "find" method in MongoDB. It allows you to filter the documents in the collection based on specified criteria. The $match stage takes in a query expression that specifies the criteria to match against. Here's an example:
 
 ```
+
+a.) Direct field match
+
+```
 db.orders.aggregate([
    { $match : { status : "A" } }
 ])
+```
 
-//another example
+b.) **$nin** (Not In):
+   The `$nin` operator checks if the value is not present in an array of values.
 
-db.getCollection("projects").aggregate([
-  {$match: {status: {$nin: ["Completed", "Site QC"]}}}
-]);
+   Example:
+   To find orders with payment methods that are not 'Credit Card' or 'PayPal':
 
-//Another example
-db.sales.aggregate([
-  {
-    $match: {
-      $or: [
-        { amount: { $gte: 5000 } }, // Filter documents where 'amount' is greater than or equal to 5000
-        { category: "Electronics" }, // Filter documents where 'category' is "Electronics"
-        { date: { $gte: ISODate("2023-01-01"), $lt: ISODate("2023-02-01") } } // Filter documents within a specific date range
-        // Add more filter conditions inside the $or array as needed
-      ]
-    }
-  }
-]);
+   ```
+   {
+     $match: {
+       paymentMethod: { $nin: ['Credit Card', 'PayPal'] }
+     }
+   }
+   ```
+
+The `$nin` operator allows you to filter documents based on values that are not present in a specified list of values. This can be particularly useful when you want to exclude documents that match certain values from your results.
+
+c.) **$eq** (Equals):
+   The `$eq` operator compares two values and returns true if they are equal.
+
+   Example:
+   Suppose you want to find orders with a total amount equal to $500.
+
+   ```
+   {
+     $match: {
+       totalAmount: { $eq: 500 }
+     }
+   }
+   ```
+
+d.) **$ne** (Not Equals):
+   The `$ne` operator compares two values and returns true if they are not equal.
+
+   Example:
+   To find orders with a total amount not equal to $1000:
+
+   ```
+   {
+     $match: {
+       totalAmount: { $ne: 1000 }
+     }
+   }
+   ```
+
+e.) **$lt** (Less Than) and **$lte** (Less Than or Equal):
+   The `$lt` operator checks if the left value is less than the right value, and `$lte` checks if it's less than or equal.
+
+   Example:
+   To find orders with a total amount less than $200:
+
+   ```
+   {
+     $match: {
+       totalAmount: { $lt: 200 }
+     }
+   }
+   ```
+
+f.) **$gt** (Greater Than) and **$gte** (Greater Than or Equal):
+   The `$gt` operator checks if the left value is greater than the right value, and `$gte` checks if it's greater than or equal.
+
+   Example:
+   To find orders with a total amount greater than or equal to $100:
+
+   ```
+   {
+     $match: {
+       totalAmount: { $gte: 100 }
+     }
+   }
+   ```
+
+g.) **$and** (Logical AND) and **$or** (Logical OR):
+   The `$and` operator performs a logical AND operation, and `$or` performs a logical OR operation on expressions.
+
+   Example (AND):
+   To find orders with a total amount between $100 and $200:
+
+   ```
+   {
+     $match: {
+       $and: [
+         { totalAmount: { $gte: 100 } },
+         { totalAmount: { $lte: 200 } }
+       ]
+     }
+   }
+   ```
+
+   Example (OR):
+   To find orders with a total amount less than $50 or greater than $500:
+
+   ```
+   {
+     $match: {
+       $or: [
+         { totalAmount: { $lt: 50 } },
+         { totalAmount: { $gt: 500 } }
+       ]
+     }
+   }
+   ```
 
 ```
 
@@ -698,7 +786,7 @@ db.orders.aggregate([
 ])
 ```
 
-<h2>More Aggregation Methods</h2>
+<h2>Arithematic Aggregation Methods</h2>
 
 In MongoDB aggregation pipelines, you can perform arithmetic operations using various aggregation operators that are provided by MongoDB. Here are some commonly used arithmetic operators for performing arithmetic operations within aggregation pipelines:
 
@@ -747,7 +835,7 @@ In MongoDB aggregation pipelines, you can perform arithmetic operations using va
    }
    ```
 
-These operators can be used in the `$project` stage of your aggregation pipeline to create new fields or modify existing fields based on arithmetic operations. Here's an example of how you might use them:
+*USECASE OF ABOVE* - These operators can be used in the `$project` stage of your aggregation pipeline to create new fields or modify existing fields based on arithmetic operations. Here's an example of how you might use them:
 
 ```
 db.orders.aggregate([
@@ -764,8 +852,9 @@ db.orders.aggregate([
 
 In above example, the `$multiply` and `$subtract` operators are used within the `$project` stage to perform arithmetic operations on fields and calculate new values. Adapt this example to match your specific use case and the fields you're working with.
 
+<h2>Conditional Operators, Field Addition and More Aggregation Methods</h2>
 
-6.) **$addFields:** Use this operator to add new field in pipeline; $project: can also kinda do this but differently
+1.) **$addFields:** Use this operator to add new field in pipeline; $project: can also kinda do this but differently
 ```
 db.orders.aggregate([
   {
@@ -795,7 +884,7 @@ db.orders.aggregate([
 ]);
 ```
 
-7.) **$cond** - The $cond operator evaluates a condition and returns one of two specified expressions based on the result of the evaluation.
+2.) **$cond** - The $cond operator evaluates a condition and returns one of two specified expressions based on the result of the evaluation.
 
 Example:
 Suppose you want to categorize orders as "High Value" if the total amount is greater than $1000, otherwise categorize them as "Low Value".
@@ -815,7 +904,7 @@ Suppose you want to categorize orders as "High Value" if the total amount is gre
 }
 ```
 
-8.) **$switch** - The $switch operator performs conditional logic similar to a switch statement in programming languages.
+3.) **$switch** - The $switch operator performs conditional logic similar to a switch statement in programming languages.
 
 ```
 {
@@ -839,7 +928,7 @@ Suppose you want to categorize orders as "High Value" if the total amount is gre
 }
 ```
 
-9.) **$ifNull** :
+4.) **$ifNull** :
 The $ifNull operator checks if the specified expression is null and returns a default value if it is.
 
 Example:
@@ -854,55 +943,7 @@ If you want to replace null values in a field with a default value:
 }
 ```
 
-Example:
-If you have multiple fields representing different types of products and you want to assign a category based on those fields:
-
-
-
-
-This will create a new collection called "processed_orders" and write the results of the aggregation pipeline to that collection.
-
-These are the main stages in the MongoDB aggregation pipeline. By combining these stages in various ways, you can perform complex data processing and analysis on your MongoDB collections.
-    
-<ul>
-<li>$match: Filters documents in the collection based on specified criteria.</li>
-<li>$group: Groups documents together based on a specified key and calculates aggregate values for each group.</li>
-<li>$sort: Sorts the documents in the collection based on a specified field or set of fields.</li>
-<li>$project: Selects and transforms fields in the documents.</li>
-</ul>
-
-The aggregation pipeline is a powerful tool for performing complex data analysis and processing in MongoDB. It allows you to combine multiple operations into a single query, which can improve performance and reduce the amount of data transferred between the database and the client.
-
-<h3>Aggregation Examples</h3>
-
-```
-db.orders.aggregate( [
-
-   // Stage 1: Filter pizza order documents by date range
-   {
-      $match:
-      {
-         "date": { $gte: new ISODate( "2020-01-30" ), $lt: new ISODate( "2022-01-30" ) }
-      }
-   },
-
-   // Stage 2: Group remaining documents by date and calculate results
-   {
-      $group:
-      {
-         _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-         totalOrderValue: { $sum: { $multiply: [ "$price", "$quantity" ] } },
-         averageOrderQuantity: { $avg: "$quantity" }
-      }
-   },
-
-   // Stage 3: Sort documents by totalOrderValue in descending order
-   {
-      $sort: { totalOrderValue: -1 }
-   }
-
- ] )
- ```
+5.)
 
 <h1>Mongoose Commands</h1>
 
