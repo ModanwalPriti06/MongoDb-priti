@@ -1046,6 +1046,132 @@ If the teacher of the second subject were not "Mrs. Johnson", the output would b
 }
 ```
 
+6.) **$reduce** - The $reduce operator in MongoDB's aggregation pipeline is used to iteratively reduce an array to a single value. It allows you to apply a user-defined expression to each element of an array and accumulate a single result. The $reduce operator is particularly useful for performing calculations or transformations that involve multiple steps on array elements.
+
+Here's the syntax of the $reduce operator:
+
+```
+{
+  $reduce: {
+    input: <array>,
+    initialValue: <initialValue>,
+    in: <expression>
+  }
+}
+```
+Let's break down each part of the $reduce operator:
+
+input: This is the array you want to iterate over and reduce.
+initialValue: This is the starting value of the accumulator. The accumulator is a variable that holds the current accumulated value.
+in: This is an expression that combines the current accumulator value with the current element being iterated over. It's essentially the logic you want to apply for each element in the array.
+
+Example-1
+
+```
+{
+  "_id": 1,
+  "name": "Alice",
+  "scores": [90, 85, 95, 78, 92]
+}
+--------------------------------
+db.students.aggregate([
+  {
+    $project: {
+      name: 1,
+      totalScore: {
+        $reduce: {
+          input: "$scores",
+          initialValue: 0,
+          in: { $add: ["$$value", "$$this"] }
+        }
+      }
+    }
+  }
+]);
+```
+In this example, the $reduce operator is used inside the $project stage. It iterates over the "scores" array of each student and accumulates the total score using the $add expression. The $$value variable represents the current accumulator value, and $$this represents the current element being iterated over.
+
+Example-2
+
+```
+{
+  "_id": 1,
+  "orderNumber": "ORD123",
+  "items": [
+    { "name": "Item A", "price": 50 },
+    { "name": "Item B", "price": 75 },
+    { "name": "Item C", "price": 60 }
+  ]
+}
+-------------------------------------
+db.orders.aggregate([
+  {
+    $project: {
+      orderNumber: 1,
+      minItemPrice: {
+        $reduce: {
+          input: "$items",
+          initialValue: Number.MAX_VALUE,
+          in: { $min: ["$$value", "$$this.price"] }
+        }
+      }
+    }
+  }
+]);
+
+or
+
+db.orders.aggregate([
+  {
+    $project: {
+      orderNumber: 1,
+      minItemPrice: {
+        $min: {
+          $map: {
+            input: "$items",
+            as: "item",
+            in: "$$item.price"
+          }
+        }
+      }
+    }
+  }
+]);
+
+```
+The $min operator finds the minimum value from that array.
+
+7.) **$filter** - To filter an item from an array in the MongoDB aggregation pipeline, you can use the $filter operator. The $filter operator allows you to create a new array that only contains the elements that match a specified condition. Here's how you can do it:
+
+```
+{
+  "_id": 1,
+  "orderNumber": "ORD123",
+  "items": [
+    { "name": "Item A", "price": 50 },
+    { "name": "Item B", "price": 75 },
+    { "name": "Item C", "price": 60 }
+  ]
+}
+
+-------------------------------------
+
+db.orders.aggregate([
+  {
+    $project: {
+      orderNumber: 1,
+      filteredItems: {
+        $filter: {
+          input: "$items",
+          as: "item",
+          cond: { $ne: ["$$item.name", "Item B"] }
+        }
+      }
+    }
+  }
+]);
+```
+
 
 <h1>Mongoose Commands</h1>
 
