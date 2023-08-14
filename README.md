@@ -555,7 +555,6 @@ Sure, here's an explanation of all the stages in the MongoDB aggregation pipelin
 
 The $match stage is similar to the "find" method in MongoDB. It allows you to filter the documents in the collection based on specified criteria. The $match stage takes in a query expression that specifies the criteria to match against. Here's an example:
 
-```
 
 a.) Direct field match
 
