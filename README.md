@@ -511,6 +511,17 @@ module.exports = {
 }
 ```
 
+```
+populate: [{
+    path: 'assignTo',
+    select: '_id name email mobile teamId departmentId'
+}]
+```
+
+**The path property specifies the field name in the main document that needs to be populated. In this case, it's 'assignTo'.**
+
+**The select property is used to specify which fields from the referenced document should be populated into the main document. The field names are separated by spaces. So, the code is selecting the following fields from the 'assignTo' document: _id, name, email, mobile, teamId, and departmentId.**
+
 Using with and without populate method
     
 ```
