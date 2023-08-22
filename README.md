@@ -704,6 +704,23 @@ db.orders.aggregate([
 
 This will group the documents in the "orders" collection by the "status" field, and calculate the total amount for each group.
 
+By default, it doesn't include the entire documents that belong to each group in the output, If you want to retrieve the documents that match each group, you would typically use the $push operator within the $group stage to accumulate the documents in an array. Here's how.
+
+```
+const pipeline = [
+  {
+    $group: {
+      _id: '$experienceCenterName',
+      documents: { $push: '$$ROOT' } // Accumulate the documents in an array
+    }
+  }
+];
+
+db.getCollection('leads').aggregate(pipeline);
+```
+
+the $$ROOT system variable represents the entire document currently being processed. The $push operator creates an array (documents) that holds all the documents belonging to each group.
+
 4. $sort: Sorts the documents in the collection based on a specified field or set of fields.
 
 The $sort stage allows you to sort the documents in the collection based on a specified field or set of fields. You can use this stage to sort the documents in ascending or descending order. Here's an example:
