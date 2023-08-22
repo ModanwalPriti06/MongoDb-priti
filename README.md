@@ -1698,81 +1698,43 @@ In Mongoose, `[options]` is an optional parameter that can be passed to many of 
 
 **Schema File => Middleware functions are applied here on schema level, BEFORE making a model, if you want to apply it on model/document level, you can add those in the routing file/enviornment**
 
-  ```
-  const mongoose = require("mongoose");
+```
+async function dateFeederMiddleware(next) {
+    const update = this.getUpdate(); // Access the update object
+    if (update && update.$set && update.$set.imosStage) {
+    const updatedStatus = update.$set.imosStage;
 
-const ModelMiddlewareSchema = new mongoose.Schema({
-  stage: {
-    type: String
-  },
-  stageChangeDate: {
-    type: Date
+    if(updatedStatus === 'Assign To IMOS User' || updatedStatus === 'Assign To IMOS User & Site BOM In-progress'){
+        update.$set.siteQcCompletedDate = new Date();
+        update.$set.imosStartDate = new Date();
+    }
+    else if(updatedStatus === 'IMOS Completed' || updatedStatus === 'IMOS Completed & Site BOM In-progress') {
+    update.$set.imosCompletedDate = new Date();
+    }
   }
-});
 
-ModelMiddlewareSchema.pre('update', function(next) {
-    console.log('pre middleware is fired update')
-    const currentStatus = this.stage
-  
-    if(this.isModified('stage')) {
-      const newStatus = this.status
 
-      if (currentStatus === 'stage1' && newStatus === 'stage2') {
-        this.stageChangeDate = new Date()
-        console.log('new date is added')
-      }
+  if (update && update.$set.currentStage) {
+    const document = await this.findOne();
+    const updatedStatus = update.$set.currentStage;
+    console.log(updatedStatus,"updatedStatus");
+
+    if(updatedStatus === "Assign To IMOS User & Site BOM Completed" || updatedStatus === "IMOS Completed & Site BOM Completed" || updatedStatus === "IMOS Completed & Site BOM In-progress" || updatedStatus === "Under Procurement & Site BOM In-progress"){
+        update.$set.factoryBomStartDate = new Date();
     }
-    next();
-  });
-
-ModelMiddlewareSchema.pre('save', function(next) {
-    console.log('pre middleware is fired save')
-    const currentStatus = this.stage
-  
-    if(this.isModified('stage')) {
-      const newStatus = this.status
-
-      if (currentStatus === 'stage1' && newStatus === 'stage2') {
-        this.stageChangeDate = new Date()
-        console.log('new date is added')
-      }
-    }
-    next();
-  });
-
-ModelMiddlewareSchema.pre('findOneAndUpdate', async function(next) {
-    console.log('pre middleware is fired findOneAndUpdate')
-
-    const update = this.getUpdate(); // Access the update object,
-
-    console.log('update is ', update)   => { '$set': { stage: 'stage2' } }
-
-  if (update && update['$set'].stage) {
-    console.log('hiiii')
-    const document = await this.findOne();  // we are accessing the current document as we cannot access the current document directly from the update object we need to use the findOne() function 
-    const project = await Project.findOne(); //we can access other models within this file to do as we may require.
-    console.log('document is ', document) // document is  {
-  // _id: 64d4c9f7ec37e5a0005a4d8c,
-  // stage: 'stage1',
-  // stageChangeDate: null,
-  // __v: 0
-// }
-    const currentStatus = document.stage;
-    const updatedStatus = update['$set'].stage;
-    console.log('currentStatus is ', currentStatus)
-    console.log('updatedStatus is ', updatedStatus)
-
-    if (currentStatus === 'stage1' && updatedStatus === 'stage2') {
-    update.$set.stageChangeDate = new Date();
-    console.log('update after adding date is ', update)
+    if(updatedStatus === 'Under Procurement' || updatedStatus === 'Under Procurement & Site BOM In-progress'){
+        update.$set.factoryBomCompletedDate = new Date();
     }
   }
     next();
-  });
+}
+LeadSchema.pre('findOneAndUpdate', dateFeederMiddleware);
+LeadSchema.pre('updateOne', dateFeederMiddleware);
+LeadSchema.pre('updateMany', dateFeederMiddleware);
+LeadSchema.pre('update', dateFeederMiddleware);
+LeadSchema.pre('save', dateFeederMiddleware);
 
-const ModelMiddleware = mongoose.model('ModelMiddleware', ModelMiddlewareSchema);
-
-module.exports = ModelMiddleware;
+const Lead = module.exports = mongoose.model('Lead', LeadSchema);
 ```
 
 **Route file**
