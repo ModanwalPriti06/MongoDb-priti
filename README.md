@@ -95,6 +95,16 @@ db.orders.aggregate([
 
 This query will first filter the documents in the "orders" collection where the "status" field is "completed", then group the documents by the "product" field and calculate the total quantity for each product, and finally sort the results by the total quantity in descending order.
 
+<h2>Standard format for a query</h2>
+
+```
+const filterpm = {status: "Approved", projectId: { $in: projectIdArr }};
+        const projectionpm = {projectId:1, materials:1, createdAt:1, status:1}
+        const optionspm = {}
+        const projectmaterials = await projectMaterial.find(filterpm,projectionpm, optionspm)
+```
+
+
 <h3>Update Commands:</h3>
 1. `db.collection.updateOne(filter, update, options)` - updates a single document that matches the specified filter.
 
