@@ -795,17 +795,39 @@ This will return a new set of documents, with one document for each item in the 
 The $lookup stage allows you to perform a left outer join with another collection in the same database. This stage is useful when you want to combine data from multiple collections. Here's an example:
 
 ```
-db.orders.aggregate([
-   {
-      $lookup:
-         {
-           from: "customers",
-           localField: "customer_id",
-           foreignField: "_id",
-           as: "customer_details"
-         }
-   }
-])
+const result = await MainCollection.aggregate([
+  {
+    $lookup: {
+      from: "projectmaterials",
+      localField: "_id",
+      foreignField: "projectId",
+      as: "projectmaterialsArr",
+      pipeline: [
+        {
+          $match: {
+            // You can add any conditions to filter the joined documents
+          }
+        },
+        {
+          $project: {
+            _id: 0, // Exclude the _id field from the joined documents
+            name: 1, // Include the 'name' field from the joined documents
+            quantity: 1 // Include the 'quantity' field from the joined documents
+          }
+        },
+        {
+          $sort: {
+            quantity: -1 // Sort the joined documents by 'quantity' field in descending order
+          }
+        }
+        // You can add more pipeline stages as needed
+      ]
+    }
+  }
+]);
+
+console.log(result);
+
 ```
 
 This will perform a left outer join with the "customers" collection, using the "customer_id" field in the "orders" collection and the "_id" field in the "customers" collection as the keys for the join. The resulting documents will contain an additional "customer_details" field, which will contain an array of matching documents from the "customers" collection.
