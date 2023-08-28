@@ -1863,3 +1863,431 @@ module.exports = router;
 ![Dark_pages-to-jpg-0003](https://user-images.githubusercontent.com/108695777/231220557-02bc337d-4b86-42df-ade2-e55b79ac5ac1.jpg)
 ![Dark_pages-to-jpg-0004](https://user-images.githubusercontent.com/108695777/231220599-ac2920e6-bc6b-4603-93b7-9fd87280c79a.jpg)
 
+
+**Pipeline Examples**
+
+```
+[
+  {
+    $match:
+      /**
+       * query: The query in MQL.
+       */
+      {
+        status: {
+          $nin: ["Completed", "Site QC"],
+        },
+      },
+  },
+  {
+    $project:
+      /**
+       * specifications: The fields to
+       *   include or exclude.
+       */
+      {
+        projectNumber: 1,
+        clientName: 1,
+      },
+  },
+  {
+    $lookup:
+      /**
+       * from: The target collection.
+       * localField: The local join field.
+       * foreignField: The target join field.
+       * as: The name for the results.
+       * pipeline: Optional pipeline to run on the foreign collection.
+       * let: Optional variables to use in the pipeline field stages.
+       */
+      {
+        from: "projectmaterials",
+        localField: "_id",
+        foreignField: "projectId",
+        as: "projectmaterialsArr",
+        pipeline: [
+          {
+            $match: {
+              status: "Approved",
+            },
+          },
+          {
+            $project: {
+              projectId: 1,
+              materials: 1,
+              createdAt: 1,
+              status: 1,
+            },
+          },
+        ],
+      },
+  },
+  {
+    $addFields: {
+      MATERIAL: {
+        $reduce: {
+          input: "$projectmaterialsArr",
+          initialValue: 0,
+          in: {
+            $add: [
+              "$$value",
+              {
+                $reduce: {
+                  input: "$$this.materials",
+                  initialValue: 0,
+                  in: {
+                    $add: [
+                      "$$value",
+                      "$$this.quantity",
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    $lookup:
+      /**
+       * from: The target collection.
+       * localField: The local join field.
+       * foreignField: The target join field.
+       * as: The name for the results.
+       * pipeline: Optional pipeline to run on the foreign collection.
+       * let: Optional variables to use in the pipeline field stages.
+       */
+      {
+        from: "procurements",
+        localField: "_id",
+        foreignField: "projectId",
+        as: "procurements",
+        pipeline: [
+          {
+            $project: {
+              materials: 1,
+              projectId: 1,
+            },
+          },
+        ],
+      },
+  },
+  {
+    $addFields: {
+      PROCUREMENT: {
+        $reduce: {
+          input: "$procurements",
+          initialValue: 0,
+          in: {
+            $add: [
+              "$$value",
+              {
+                $reduce: {
+                  input: "$$this.materials",
+                  initialValue: 0,
+                  in: {
+                    $add: [
+                      "$$value",
+                      "$$this.requestedQuantity",
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    $lookup:
+      /**
+       * from: The target collection.
+       * localField: The local join field.
+       * foreignField: The target join field.
+       * as: The name for the results.
+       * pipeline: Optional pipeline to run on the foreign collection.
+       * let: Optional variables to use in the pipeline field stages.
+       */
+      {
+        from: "serviceorders",
+        localField: "_id",
+        foreignField: "projectId",
+        as: "serviceorders",
+        pipeline: [
+          {
+            $project: {
+              materials: 1,
+              projectId: 1,
+            },
+          },
+        ],
+      },
+  },
+  {
+    $addFields: {
+      SERVICEORDER: {
+        $reduce: {
+          input: "$serviceorders",
+          initialValue: 0,
+          in: {
+            $add: [
+              "$$value",
+              {
+                $reduce: {
+                  input: "$$this.materials",
+                  initialValue: 0,
+                  in: {
+                    $add: [
+                      "$$value",
+                      "$$this.requestedQuantity",
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    $lookup:
+      /**
+       * from: The target collection.
+       * localField: The local join field.
+       * foreignField: The target join field.
+       * as: The name for the results.
+       * pipeline: Optional pipeline to run on the foreign collection.
+       * let: Optional variables to use in the pipeline field stages.
+       */
+      {
+        from: "materialtransfers",
+        localField: "_id",
+        foreignField: "projectId",
+        as: "materialtransfers",
+        pipeline: [
+          {
+            $project: {
+              materials: 1,
+              projectId: 1,
+            },
+          },
+        ],
+      },
+  },
+  {
+    $addFields: {
+      MATERIALTRANSFER: {
+        $reduce: {
+          input: "$materialtransfers",
+          initialValue: 0,
+          in: {
+            $add: [
+              "$$value",
+              {
+                $reduce: {
+                  input: "$$this.materials",
+                  initialValue: 0,
+                  in: {
+                    $add: [
+                      "$$value",
+                      "$$this.requestedQuantity",
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    $lookup: {
+      from: "leads",
+      localField: "_id",
+      foreignField: "erpProjectId",
+      as: "leads",
+      pipeline: [
+        {
+          $project: {
+            customerDesignSignOffDate: {
+              $cond: {
+                if: {
+                  $eq: [
+                    "$customerDesignSignOffDate",
+                    null,
+                  ],
+                },
+                then: "$missingDateValue",
+                // Provide a default value when the date is missing
+                else: "$customerDesignSignOffDate",
+              },
+            },
+            currentStage: 1,
+          },
+        },
+        // Add more stages to the pipeline if needed
+      ],
+    },
+  },
+  {
+    $addFields:
+      /**
+       * newField: The new field name.
+       * expression: The new field expression.
+       */
+      {
+        leads: {
+          $arrayElemAt: ["$leads", 0],
+        },
+      },
+  },
+  {
+    $addFields:
+      /**
+       * newField: The new field name.
+       * expression: The new field expression.
+       */
+      {
+        customerDesignSignOffDate:
+          "$leads.customerDesignSignOffDate",
+        currentStage: "$leads.currentStage",
+      },
+  },
+  {
+    $lookup: {
+      from: "sitebomprojects",
+      localField: "_id",
+      foreignField: "projectId",
+      as: "sitebomprojects",
+      pipeline: [
+        {
+          $project: {
+            createdAt: {
+              $cond: {
+                if: {
+                  $eq: ["$createdAt", null],
+                },
+                then: "$missingDateValue",
+                // Provide a default value when the date is missing
+                else: "$createdAt",
+              },
+            },
+          },
+        },
+        // Add more stages to the pipeline if needed
+      ],
+    },
+  },
+  {
+    $addFields:
+      /**
+       * newField: The new field name.
+       * expression: The new field expression.
+       */
+      {
+        sitebomprojects: {
+          $arrayElemAt: ["$sitebomprojects", 0],
+        },
+      },
+  },
+  {
+    $addFields:
+      /**
+       * newField: The new field name.
+       * expression: The new field expression.
+       */
+      {
+        assignedDate:
+          "$sitebomprojects.createdAt",
+      },
+  },
+  {
+    $project:
+      /**
+       * specifications: The fields to
+       *   include or exclude.
+       */
+      {
+        projectmaterialsArr: 0,
+        procurements: 0,
+        serviceorders: 0,
+        materialtransfers: 0,
+        sitebomprojects: 0,
+        leads: 0,
+      },
+  },
+  {
+    $addFields: {
+      percentCompletion: {
+        $multiply: [
+          {
+            $divide: [
+              {
+                $add: [
+                  {
+                    $ifNull: ["$PROCUREMENT", 0],
+                  },
+                  {
+                    $ifNull: ["$SERVICEORDER", 0],
+                  },
+                  {
+                    $ifNull: [
+                      "$MATERIALTRANSFER",
+                      0,
+                    ],
+                  },
+                ],
+              },
+              {
+                $cond: [
+                  {
+                    $eq: [
+                      {
+                        $ifNull: ["$MATERIAL", 0],
+                      },
+                      0,
+                    ],
+                  },
+                  1,
+                  "$MATERIAL",
+                ],
+              },
+            ],
+          },
+          100,
+        ],
+      },
+    },
+  },
+  {
+    $addFields: {
+      dateDifferenceInDays: {
+        $divide: [
+          {
+            $subtract: [
+              new Date(),
+              "$assignedDate",
+            ],
+          },
+          // Difference in milliseconds
+          1000 * 60 * 60 * 24, // Milliseconds in a day
+        ],
+      },
+    },
+  },
+  {
+    $sort:
+      /**
+       * Provide any number of field/order pairs.
+       */
+      {
+        dateDifferenceInDays: -1,
+      },
+  },
+]
+```
