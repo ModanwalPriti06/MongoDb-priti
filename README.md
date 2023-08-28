@@ -802,10 +802,10 @@ const result = await MainCollection.aggregate([
       localField: "_id",
       foreignField: "projectId",
       as: "projectmaterialsArr",
-      pipeline: [
+      pipeline: [         //on the joined documents
         {
           $match: {
-            // You can add any conditions to filter the joined documents
+            status: "Approved" // You can add any conditions to filter the joined documents
           }
         },
         {
@@ -1201,6 +1201,25 @@ db.orders.aggregate([
 ```
 The $min operator finds the minimum value from that array.
 
+Example-3 Nested reduce i.e reduce on a document field containing arrays of array
+
+```
+{
+  MATERIAL: {
+    $reduce : {
+      input: '$projectmaterialsArr',
+      initialValue : 0,
+      in : {
+        $add : ['$$value', {$reduce: {
+          input: '$$this.materials',
+          initialValue : 0,
+          in : {$add : ["$$value", '$$this.quantity']}
+        }}]
+      }
+    }
+  }
+}
+```
 7.) **$filter** - To filter an item from an array in the MongoDB aggregation pipeline, you can use the $filter operator. The $filter operator allows you to create a new array that only contains the elements that match a specified condition. Here's how you can do it:
 
 ```
