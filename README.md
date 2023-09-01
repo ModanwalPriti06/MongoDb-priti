@@ -2291,3 +2291,15 @@ module.exports = router;
   },
 ]
 ```
+
+<h3>Find Query to search on an array field</h3>
+
+```
+db.collectionName.find({
+  type: {
+    $not: {
+      $elemMatch: { $eq: "store" } // Replace "store" with the value you want to exclude
+    }
+  }
+});
+```
