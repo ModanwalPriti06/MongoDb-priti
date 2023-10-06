@@ -2303,3 +2303,26 @@ db.collectionName.find({
   }
 });
 ```
+
+<h3>Using aggregation stage match in node</h3>
+
+```
+router.get('/getFromLeads', async (req, res)=>{
+    try{
+        const data = await Lead.aggregate([
+            {
+                $match:{designToExecutionLogsStatus: "Sent For Approval",
+                    designStages: "Design Sign-off",
+                    departmentId: mongoose.Types.ObjectId("5cb70b89ffa4965f53aa22d8")
+                }
+            }
+        ])
+        console.log('data is',data.length);
+        res.status(200).send(data)
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).send(err)
+    }
+})
+```
