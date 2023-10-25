@@ -1857,7 +1857,108 @@ router.put('/deleteAll', async (req, res) => {
 
 module.exports = router;
 ```
-    
+
+<h2>Middleware with change to another model and an api call</h2>
+
+```
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const constants = require('../constant/constant');
+const Project = require('./project');
+const express = require('express');
+const router = express.Router();
+const async = require('async');
+const axios = require('axios');
+
+const QueueProcessSchema = new Schema({
+    projectId: {
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+    status: {
+        type: String,
+        enum: constants.processStatus
+    },
+    version: {
+        type: String
+    },
+    quality: {
+        type: String
+    },
+    sceneName: {
+        type: String
+    },
+    startingTime: {
+        type: Date
+    },
+    endingTime: {
+        type: Date
+    },
+    command: {
+        type: String
+    },
+    user: {
+        type: Schema.Types.ObjectId
+    },
+    skpPath: {
+        type: String
+    },
+    jsonPath: {
+        type: String
+    },
+    outputPath: {
+        type: String
+    },
+    uuid_val: {
+        type: String
+    },
+    orgId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    isPublic: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
+});
+
+QueueProcessSchema.plugin(require('mongoose-timestamp'));
+QueueProcessSchema.plugin(require('mongoose-delete'), {
+    overrideMethods: true,
+    deletedAt: true
+});
+
+async function dataFeederMiddleware(next) {
+    const update = this.getUpdate(); // Access the update object
+    // update.$set && update.$set.imosStage
+    // update.$set.imosStartDate = new Date();
+    const document = await this.findOne();
+    const UUID = document.uuid_val;
+    if(update.$set.status && update.$set.status == 'Completed'){
+
+        const apiUrl = `http://localhost:5000/api/query/addImageLinkToProjectDb?UUID=${UUID}`
+        axios.post(apiUrl).then((response) => {
+            console.log('------------------------GUTSANDGLORY------------------------',response);
+        }).catch((error) => {
+            console.log('------------------------GUTSANDGLORY------------------------',error);
+        });
+    }
+    next();
+}
+QueueProcessSchema.pre('findOneAndUpdate', dataFeederMiddleware);
+QueueProcessSchema.pre('updateOne', dataFeederMiddleware);
+QueueProcessSchema.pre('updateMany', dataFeederMiddleware);
+QueueProcessSchema.pre('update', dataFeederMiddleware);
+// QueueProcessSchema.pre('save', dataFeederMiddlewareSave);
+
+
+const QueueProcess = module.exports = mongoose.model('QueueProcess', QueueProcessSchema);
+
+```
+
 ![Dark_pages-to-jpg-0001](https://user-images.githubusercontent.com/108695777/231220392-11314396-21f9-47c0-88f3-2602c0954630.jpg)
 ![Dark_pages-to-jpg-0002](https://user-images.githubusercontent.com/108695777/231220470-755aec9b-f81c-4d55-a57c-e417ce0ab685.jpg)
 ![Dark_pages-to-jpg-0003](https://user-images.githubusercontent.com/108695777/231220557-02bc337d-4b86-42df-ade2-e55b79ac5ac1.jpg)
