@@ -2427,3 +2427,42 @@ router.get('/getFromLeads', async (req, res)=>{
     }
 })
 ```
+
+<h3 href='https://www.mongodb.com/docs/manual/changeStreams/'>Change Stream</h3>
+
+Change streams allow applications to access real-time data changes, Applications can use change streams to subscribe to all data changes on a single collection {db.collection.watch()}, a database {db.watch()}, or an entire deployment {mongo.watch()}, and immediately react to them. Because change streams use the aggregation framework, applications can also filter for specific changes or transform the notifications at will.
+
+```
+const { MongoClient } = require('mongodb');
+const config = require('../config/database');
+
+module.exports = function () {
+    MongoClient.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then(client => {
+            console.log("Connected to MongoDB");
+
+            const db = client.db('inventory_tool');
+
+            if (db) {
+                console.log("Database object obtained successfully");
+                // Now you can work with the database
+                const collection = db.collection('chmtickets');
+
+                // Create a change stream
+                // const changeStream = collection.watch();   //monitor a collection
+                const changeStream = db.watch();              //monitor the db
+
+                // Listen for changes
+                changeStream.on('change', change => {
+                    console.log("Change occurred:", change);
+                    // Handle the change here
+                });
+            } else {
+                console.log("Failed to obtain the database object");
+            }
+
+        })
+        .catch(err => console.error('Error in connection', err));
+}
+
+```
