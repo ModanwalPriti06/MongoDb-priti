@@ -472,6 +472,62 @@ Schema Methods:
 </ol>
 
 ```
+const mongoose = require('mongoose');
+
+const leadsSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+});
+
+
+// Define a custom method for the SCHEMA
+leadsSchema.methods.totalLeadCount = async function() {
+    try {
+        const count = await this.model('leads').countDocuments();
+        return count;
+    } catch (error) {
+        throw new Error('Error in totalLeadCount method: ' + error);
+    }
+};
+
+// Define a static method for the MODEL
+leadsSchema.statics.totalLeadCount = async function() {
+    try {
+        const count = await this.countDocuments();
+        return count;
+    } catch (error) {
+        throw new Error('Error in totalLeadCount method: ' + error);
+    }
+};
+
+// Create the Leads model
+const Leads = mongoose.model('leads', leadsSchema);
+
+// Now, you can use the custom method like this:
+(async () => {
+    try {
+        // Create an instance of Leads
+        const lead = new Leads({ name: 'John', email: 'john@example.com' });
+
+        // Save the lead to the database
+        await lead.save();
+
+        // Call the schema method to get total lead count
+        const totalCount = await lead.totalLeadCount();
+
+         // Call the static method to get total lead count
+        const totalCount = await Leads.totalLeadCount();
+
+        console.log('Total Lead Count:', totalCount);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+})();
+```
+
+**Old**
+
+```
 const Person = module.exports = mongoose.model('Person', PersonSchema);
 
 
