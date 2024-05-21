@@ -452,8 +452,24 @@ const UserSchema = new Schema({
 module.exports=mongoose.model("users",UserSchema)
 ```
 
-<h2>Adding custom functions to schema model + .select()</h2>
-    
+<h2>SCHEMA & MODELS custom Functions+ .select()</h2>
+
+<ol>
+Schema Methods:
+
+
+<li>These methods are available on instances of the model. When you create a document using the model, you can call these methods on that document.</li>
+<li>They have access to the specific document's data (i.e., this refers to the document).</li>
+<li>Useful for operations that are specific to individual documents.</li>
+</ol>
+
+<ol>Static Methods:
+
+<li>These methods are available on the model itself. You call them directly on the model, rather than on a specific document instance.</li>
+<li>They do not have access to any specific document's data. They operate at the model level.</li>
+<li>Useful for operations that are not tied to a specific document, such as aggregations, finding documents by certain criteria, etc.</li>
+
+</ol>
 
 ```
 const Person = module.exports = mongoose.model('Person', PersonSchema);
